@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>☢️ БУНКЕР</title>
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    :root {
+      --bg:#07090a; --s1:#0d1517; --s2:#111d1f; --s3:#162022;
+      --green:#34d399; --green2:#059669; --green3:#022c22;
+      --red:#f87171; --amber:#fbbf24; --blue:#60a5fa;
+      --text:#d1fae5; --muted:#6ee7b7; --dim:#34d399;
+      --border:rgba(52,211,153,.15); --border2:rgba(52,211,153,.3);
+    }
+    body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; min-height:100dvh; }
+    .screen { display:none; min-height:100dvh; flex-direction:column; align-items:center; padding:20px 16px 32px; }
+    .screen.active { display:flex; }
+
+    /* ── TYPOGRAPHY ── */
+    h1 { font-size:2.4rem; font-weight:900; letter-spacing:.05em; }
+    h2 { font-size:1.4rem; font-weight:700; }
+    h3 { font-size:1.1rem; font-weight:600; }
+    p  { line-height:1.6; color:var(--muted); }
+
+    /* ── BUTTONS ── */
+    .btn {
+      width:100%; padding:16px; border:none; border-radius:12px; font-size:1rem;
+      font-weight:700; cursor:pointer; transition:all .15s; letter-spacing:.03em;
+    }
+    .btn-primary { background:var(--green2); color:#fff; border:1px solid var(--green); }
+    .btn-primary:active { transform:scale(.97); background:#047857; }
+    .btn-danger  { background:#7f1d1d; color:var(--red); border:1px solid var(--red); }
+    .btn-danger:active { transform:scale(.97); }
+    .btn-ghost   { background:transparent; color:var(--muted); border:1px solid var(--border2); }
+    .btn-ghost:active { transform:scale(.97); background:var(--s2); }
+    .btn + .btn  { margin-top:10px; }
+    .btn:disabled { opacity:.4; pointer-events:none; }
+
+    /* ── CARD ── */
+    .card {
+      background:var(--s1); border:1px solid var(--border2); border-radius:16px;
+      padding:16px; width:100%; margin-bottom:12px;
+    }
+    .card-header { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+    .card-icon { font-size:1.6rem; line-height:1; }
+    .card-label { font-size:.7rem; font-weight:700; letter-spacing:.1em; color:var(--dim); text-transform:uppercase; }
+    .card-value { font-size:1.05rem; font-weight:600; }
+    .card-sub   { font-size:.85rem; color:var(--muted); margin-top:2px; }
+
+    /* ── BADGE ── */
+    .badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:.75rem; font-weight:700; }
+    .badge-green { background:var(--green3); color:var(--green); border:1px solid var(--green2); }
+    .badge-red   { background:#450a0a; color:var(--red); border:1px solid #7f1d1d; }
+    .badge-amber { background:#451a03; color:var(--amber); border:1px solid #92400e; }
+
+    /* ── STEPPER ── */
+    .stepper { display:flex; align-items:center; gap:12px; }
+    .stepper button { width:44px; height:44px; border-radius:50%; border:1px solid var(--border2); background:var(--s2); color:var(--text); font-size:1.3rem; cursor:pointer; flex-shrink:0; }
+    .stepper button:active { background:var(--s3); }
+    .stepper-val { font-size:2rem; font-weight:900; color:var(--green); min-width:48px; text-align:center; }
+
+    /* ── TIMER ── */
+    .timer-ring { position:relative; display:flex; align-items:center; justify-content:center; }
+    .timer-svg  { transform:rotate(-90deg); }
+    .timer-track { fill:none; stroke:var(--s3); stroke-width:8; }
+    .timer-prog  { fill:none; stroke:var(--green); stroke-width:8; stroke-linecap:round; transition:stroke-dashoffset .9s linear, stroke .5s; }
+    .timer-num  { position:absolute; font-size:2.6rem; font-weight:900; letter-spacing:.02em; }
+
+    /* ── PLAYER LIST ── */
+    .player-row {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:12px 14px; background:var(--s1); border:1px solid var(--border);
+      border-radius:12px; margin-bottom:8px; cursor:pointer; transition:all .15s;
+    }
+    .player-row:active { background:var(--s2); border-color:var(--border2); }
+    .player-row.selected { border-color:var(--red); background:#1a0505; }
+    .player-row.voted    { border-color:var(--green2); opacity:.5; pointer-events:none; }
+    .player-row.eliminated { opacity:.35; pointer-events:none; text-decoration:line-through; }
+    .player-num { font-size:1rem; font-weight:700; color:var(--green); }
+    .player-elim-badge { font-size:.7rem; color:var(--red); font-weight:700; }
+
+    /* ── VOTE BAR ── */
+    .vote-bar-wrap { margin-bottom:10px; }
+    .vote-bar-label { display:flex; justify-content:space-between; font-size:.85rem; margin-bottom:4px; }
+    .vote-bar-bg { background:var(--s2); border-radius:4px; height:8px; overflow:hidden; }
+    .vote-bar-fill { height:100%; border-radius:4px; background:var(--green2); transition:width .4s ease; }
+    .vote-bar-fill.most { background:var(--red); }
+
+    /* ── MISC ── */
+    .sep { width:100%; height:1px; background:var(--border); margin:16px 0; }
+    .top-row { display:flex; align-items:center; justify-content:space-between; width:100%; margin-bottom:4px; }
+    .glow { text-shadow:0 0 20px var(--green), 0 0 40px var(--green2); }
+    .glow-red { text-shadow:0 0 20px var(--red); }
+    .sub-title { font-size:.85rem; color:var(--dim); letter-spacing:.08em; font-weight:600; text-transform:uppercase; }
+    .center { text-align:center; }
+    .full-center { width:100%; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; }
+    .spacer { flex:1; }
+    .small-note { font-size:.8rem; color:var(--dim); text-align:center; }
+    .phase-tag { font-size:.7rem; font-weight:700; letter-spacing:.12em; color:var(--dim); text-transform:uppercase; }
+
+    /* ── SCENARIO BLOCK ── */
+    .scenario-box {
+      background:var(--s2); border:1px solid #7f1d1d; border-radius:14px;
+      padding:18px; width:100%; margin:12px 0;
+    }
+    .scenario-title { font-size:1.2rem; font-weight:800; color:var(--red); margin-bottom:8px; }
+    .scenario-text  { font-size:.9rem; color:var(--muted); line-height:1.7; }
+
+    /* ── PLAYER CARD (secret) ── */
+    .player-card-header {
+      background:linear-gradient(135deg,var(--s2),var(--green3));
+      border:1px solid var(--border2); border-radius:16px 16px 0 0;
+      padding:20px; text-align:center; width:100%;
+    }
+    .player-card-body { background:var(--s1); border:1px solid var(--border); border-radius:0 0 16px 16px; width:100%; padding:4px 0; }
+    .card-row { display:flex; align-items:center; gap:12px; padding:12px 16px; border-bottom:1px solid var(--border); }
+    .card-row:last-child { border-bottom:none; }
+    .card-row-icon { font-size:1.4rem; width:28px; text-align:center; flex-shrink:0; }
+    .card-row-info .label { font-size:.65rem; font-weight:700; letter-spacing:.1em; color:var(--dim); text-transform:uppercase; }
+    .card-row-info .val   { font-size:.95rem; font-weight:600; margin-top:1px; }
+    .fact-box {
+      background:linear-gradient(135deg,#1a1000,#0f1700);
+      border:1px dashed var(--amber); border-radius:12px; padding:14px 16px; margin:12px;
+    }
+    .fact-box .fact-label { font-size:.65rem; font-weight:700; letter-spacing:.1em; color:var(--amber); text-transform:uppercase; margin-bottom:6px; }
+    .fact-box .fact-text  { font-size:.9rem; color:#fef3c7; line-height:1.5; }
+
+    /* ── COVER SCREEN ── */
+    .cover-screen {
+      position:fixed; inset:0; background:var(--bg); z-index:100;
+      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;
+    }
+    .cover-screen.hidden { display:none; }
+    .cover-lock { font-size:4rem; }
+    .cover-text { font-size:1.1rem; color:var(--muted); text-align:center; }
+    .cover-name { font-size:1.8rem; font-weight:900; color:var(--green); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
+    .animate-in { animation:fadeIn .3s ease forwards; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+    .pulse { animation:pulse 1.5s infinite; }
+
+    /* ── SCROLL FIX ── */
+    .scroll-area { width:100%; overflow-y:auto; flex:1; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     COVER / LOCK SCREEN
+══════════════════════════════════════════════ -->
+<div class="cover-screen hidden" id="coverScreen">
+  <div class="cover-lock">🔒</div>
+  <div class="cover-name" id="coverPlayerName"></div>
+  <div class="cover-text" id="coverText"></div>
+  <button class="btn btn-primary" style="max-width:280px;margin-top:8px" id="coverBtn"></button>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN 1 – SETUP
+══════════════════════════════════════════════ -->
+<div class="screen active" id="screenSetup">
+  <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:0;flex:1">
+    <div style="text-align:center;padding:32px 0 24px">
+      <div style="font-size:3.5rem;margin-bottom:8px">☢️</div>
+      <h1 class="glow">БУНКЕР</h1>
+      <p class="sub-title" style="margin-top:6px">гра на виживання</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="margin-bottom:12px">👥 Кількість гравців</div>
+      <div class="stepper">
+        <button id="btnDecPlayers">−</button>
+        <div class="stepper-val" id="valPlayers">6</div>
+        <button id="btnIncPlayers">+</button>
+        <span style="color:var(--muted);font-size:.85rem">від 2 до 14</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="margin-bottom:12px">🚪 Місць у бункері</div>
+      <div class="stepper">
+        <button id="btnDecSpots">−</button>
+        <div class="stepper-val" id="valSpots">3</div>
+        <button id="btnIncSpots">+</button>
+        <span style="color:var(--muted);font-size:.85rem" id="spotsHint"></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="margin-bottom:12px">⏱ Час обговорення</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="timerOptions">
+        <button class="btn btn-ghost timer-opt" data-val="90">1:30</button>
+        <button class="btn btn-ghost timer-opt selected" data-val="180">3:00</button>
+        <button class="btn btn-ghost timer-opt" data-val="300">5:00</button>
+        <button class="btn btn-ghost timer-opt" data-val="420">7:00</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="margin-bottom:12px">🌋 Сценарій катастрофи</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="scenarioOptions">
+        <button class="btn btn-ghost scen-opt selected" data-val="0">☢️ Ядерна</button>
+        <button class="btn btn-ghost scen-opt" data-val="1">🦠 Пандемія</button>
+        <button class="btn btn-ghost scen-opt" data-val="2">☄️ Астероїд</button>
+        <button class="btn btn-ghost scen-opt" data-val="3">🌊 Потоп</button>
+        <button class="btn btn-ghost scen-opt" data-val="random" style="grid-column:span 2">🎲 Випадковий</button>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+    <button class="btn btn-primary" id="btnStartGame" style="font-size:1.1rem;padding:18px">ПОЧАТИ ГРУ →</button>
+    <div style="height:16px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN 2 – SCENARIO
+══════════════════════════════════════════════ -->
+<div class="screen" id="screenScenario">
+  <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1;gap:0">
+    <div style="text-align:center;padding:28px 0 16px">
+      <div id="scenarioEmoji" style="font-size:3.5rem;margin-bottom:8px">☢️</div>
+      <div class="phase-tag">УВАГА! КАТАСТРОФА</div>
+      <h2 id="scenarioName" style="margin-top:8px;color:var(--red)" class="glow-red">Ядерна катастрофа</h2>
+    </div>
+
+    <div class="scenario-box">
+      <div class="scenario-title" id="scenarioAlert">🔴 Надзвичайна ситуація</div>
+      <p class="scenario-text" id="scenarioDesc"></p>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="margin-bottom:8px">📊 Умови виживання</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <div class="badge badge-red">👥 Гравців: <span id="sInfoPlayers"></span></div>
+        <div class="badge badge-green">🚪 Місць: <span id="sInfoSpots"></span></div>
+        <div class="badge badge-amber">⏱ Раундів: <span id="sInfoRounds"></span></div>
+      </div>
+      <div class="sep"></div>
+      <p style="font-size:.85rem;color:var(--muted);line-height:1.6">
+        Бункер може прийняти лише <strong style="color:var(--green)" id="sInfoSpots2"></strong> осіб.
+        Голосуванням вирішіть, хто лишиться за дверима.
+      </p>
+    </div>
+
+    <div class="spacer"></div>
+    <button class="btn btn-primary" id="btnToCardDeal" style="font-size:1.1rem;padding:18px">РОЗДАТИ КАРТИ →</button>
+    <div style="height:16px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN 3 – CARD DEAL (secret)
+══════════════════════════════════════════════ -->
+<div class="screen" id="screenCard">
+  <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1">
+    <div style="text-align:center;padding:20px 0 12px">
+      <div class="phase-tag">КАРТКИ ГРАВЦІВ</div>
+      <div style="margin-top:6px;font-size:.9rem;color:var(--muted)">
+        Гравець <span id="cardPlayerNum" style="color:var(--green);font-weight:800"></span> з <span id="cardPlayerTotal"></span>
+      </div>
+    </div>
+
+    <div class="player-card-header">
+      <div style="font-size:2.5rem" id="cardProfIcon"></div>
+      <div style="font-size:.7rem;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:4px">Ваша роль</div>
+      <div style="font-size:1.3rem;font-weight:800;margin-top:2px" id="cardProfName"></div>
+      <div style="font-size:.85rem;color:var(--muted);margin-top:4px" id="cardProfDesc"></div>
+    </div>
+
+    <div class="player-card-body">
+      <div class="card-row">
+        <div class="card-row-icon">❤️</div>
+        <div class="card-row-info">
+          <div class="label">Стан здоров'я</div>
+          <div class="val" id="cardHealth"></div>
+        </div>
+        <div id="cardHealthBadge"></div>
+      </div>
+      <div class="card-row">
+        <div class="card-row-icon">🎯</div>
+        <div class="card-row-info">
+          <div class="label">Хобі</div>
+          <div class="val" id="cardHobby"></div>
+        </div>
+      </div>
+      <div class="card-row">
+        <div class="card-row-icon">🎒</div>
+        <div class="card-row-info">
+          <div class="label">Багаж</div>
+          <div class="val" id="cardBaggage"></div>
+        </div>
+      </div>
+      <div class="card-row" style="border-bottom:none">
+        <div class="card-row-icon">⚡</div>
+        <div class="card-row-info">
+          <div class="label">Унікальна навичка</div>
+          <div class="val" id="cardSkill"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fact-box">
+      <div class="fact-label">🔐 Таємний факт (тільки для вас)</div>
+      <div class="fact-text" id="cardFact"></div>
+    </div>
+
+    <div class="small-note" style="margin-top:4px">Запам'ятайте картку — вона більше не з'явиться</div>
+    <div class="spacer"></div>
+    <button class="btn btn-primary" id="btnCardReady" style="margin-top:16px;font-size:1.05rem;padding:18px">Я ЗАПАМ'ЯТАВ ✓</button>
+    <div style="height:16px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN 4 – DISCUSSION
+══════════════════════════════════════════════ -->
+<div class="screen" id="screenDiscussion">
+  <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1;align-items:center">
+    <div style="text-align:center;padding:20px 0 8px;width:100%">
+      <div class="phase-tag">РАУНД <span id="roundNum"></span></div>
+      <h2 style="margin-top:6px">Час обговорення</h2>
+    </div>
+
+    <div class="card" style="text-align:center;padding:12px">
+      <div style="font-size:.85rem;color:var(--muted);margin-bottom:8px">⚠️ Ще потрібно прибрати <strong style="color:var(--red)" id="toElimCount"></strong> гравців</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center" id="activePlayers"></div>
+    </div>
+
+    <div style="margin:20px 0">
+      <div class="timer-ring">
+        <svg class="timer-svg" width="200" height="200" viewBox="0 0 200 200">
+          <circle class="timer-track" cx="100" cy="100" r="88"/>
+          <circle class="timer-prog" id="timerCircle" cx="100" cy="100" r="88"/>
+        </svg>
+        <div class="timer-num" id="timerDisplay">3:00</div>
+      </div>
+    </div>
+
+    <div class="card" style="width:100%">
+      <div class="card-label" style="margin-bottom:8px">💡 Правила обговорення</div>
+      <ul style="font-size:.85rem;color:var(--muted);line-height:2;padding-left:16px">
+        <li>Розкажіть про свою роль та навички</li>
+        <li>Переконайте інших взяти вас у бункер</li>
+        <li>Ставте питання іншим гравцям</li>
+        <li>Таємний факт можна приховати або розкрити</li>
+      </ul>
+    </div>
+
+    <div class="spacer"></div>
+    <button class="btn btn-primary" id="btnStartVoting" style="font-size:1.05rem;padding:18px;width:100%">ПЕРЕЙТИ ДО ГОЛОСУВАННЯ</button>
+    <div style="height:16px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN 5 – VOTE
+══════════════════════════════════════════════ -->
+<div class="screen" id="screenVote">
+  <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1">
+    <div style="text-align:center;padding:20px 0 12px">
+      <div class="phase-tag">ГОЛОСУВАННЯ • РАУНД <span id="voteRoundNum"></span></div>
+      <h2 style="margin-top:6px">Гравець <span id="votePlayerNum" style="color:var(--green)"></span></h2>
+      <p style="margin-top:4px;font-size:.9rem">Хто має залишити бункер?</p>
+    </div>
+
+    <div class="card" style="padding:12px">
+      <div style="font-size:.8rem;color:var(--muted)">
+        🔒 Голос анонімний — інші не побачать ваш вибір<br>
+        Проголосувало: <span id="voteProgress" style="color:var(--green);font-weight:700"></span>
+      </div>
+    </div>
+
+    <div style="flex:1;overflow-y:auto;padding:4px 0" id="voteList"></div>
+
+    <div style="height:16px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN 6 – ROUND RESULT
+══════════════════════════════════════════════ -->
+<div class="screen" id="screenRoundResult">
+  <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1;align-items:center">
+    <div style="text-align:center;padding:28px 0 16px">
+      <div style="font-size:3rem" id="resultEmoji">💀</div>
+      <div class="phase-tag" style="margin-top:8px">РЕЗУЛЬТАТИ ГОЛОСУВАННЯ</div>
+      <h2 style="margin-top:8px;color:var(--red)" id="resultTitle"></h2>
+      <p style="margin-top:6px;font-size:.9rem" id="resultSubtitle"></p>
+    </div>
+
+    <div class="card" style="width:100%">
+      <div class="card-label" style="margin-bottom:12px">📊 Розподіл голосів</div>
+      <div id="voteBars"></div>
+    </div>
+
+    <div class="card" style="width:100%;text-align:center">
+      <div class="card-label" style="margin-bottom:8px">🏠 Стан бункера</div>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap" id="bunkerStatus"></div>
+    </div>
+
+    <div class="spacer"></div>
+    <button class="btn btn-primary" id="btnAfterResult" style="font-size:1.05rem;padding:18px;width:100%"></button>
+    <div style="height:16px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN 7 – GAME END
+══════════════════════════════════════════════ -->
+<div class="screen" id="screenEnd">
+  <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1;align-items:center">
+    <div style="text-align:center;padding:32px 0 20px">
+      <div style="font-size:3.5rem" id="endEmoji">🏆</div>
+      <div class="phase-tag" style="margin-top:8px">ГРАВЦІ У БУНКЕРІ</div>
+      <h1 style="margin-top:8px;font-size:1.8rem" id="endTitle" class="glow">ВИЖИВШІ</h1>
+    </div>
+
+    <div style="width:100%;margin-bottom:12px" id="survivorCards"></div>
+
+    <div class="card" style="width:100%">
+      <div class="card-label" style="margin-bottom:8px">💀 Залишились зовні</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap" id="loserBadges"></div>
+    </div>
+
+    <div class="spacer"></div>
+    <button class="btn btn-ghost" id="btnRestart" style="font-size:1rem;padding:16px;width:100%">🔄 Грати знову</button>
+    <div style="height:16px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════ -->
+<script>
+/* ─── DATA ─────────────────────────────────── */
+const PROFESSIONS = [
+  { name:'Хірург',              icon:'🏥', desc:'Досвідчений лікар з операційної' },
+  { name:'Інженер-ядерник',     icon:'⚛️', desc:'Обслуговує ядерні реактори' },
+  { name:'Агроном',             icon:'🌾', desc:'Вирощує їжу в будь-яких умовах' },
+  { name:'Військовий',          icon:'🪖', desc:'Бойовий досвід і знання зброї' },
+  { name:'Психолог',            icon:'🧠', desc:'Підтримує психологічний клімат' },
+  { name:'Інженер-механік',     icon:'🔧', desc:'Ремонтує та будує все підряд' },
+  { name:'Кухар',               icon:'👨‍🍳', desc:'Може нагодувати з нічого' },
+  { name:'Біолог',              icon:'🔬', desc:'Знавець флори, фауни і мутацій' },
+  { name:'Поліцейський',        icon:'🚔', desc:'Підтримує порядок і безпеку' },
+  { name:'Вчитель',             icon:'📚', desc:'Передає знання наступним поколінням' },
+  { name:'Програміст',          icon:'💻', desc:'Керує системами і технікою' },
+  { name:'Акушер-гінеколог',    icon:'👶', desc:'Допомагає народжувати нове покоління' },
+  { name:'Ветеринар',           icon:'🐕', desc:'Лікує тварин, придатний і для людей' },
+  { name:'Священик',            icon:'⛪', desc:'Духовна підтримка і моральний авторитет' },
+];
+
+const HEALTH = [
+  { name:'Абсолютно здоровий',       sev:'good',    icon:'💪' },
+  { name:'Легка короткозорість',      sev:'ok',      icon:'👓' },
+  { name:'Хронічна мігрень',          sev:'bad',     icon:'🤕' },
+  { name:'Цукровий діабет 2 типу',    sev:'bad',     icon:'💉' },
+  { name:'Хронічна астма',            sev:'bad',     icon:'😮‍💨' },
+  { name:'Ниркова недостатність',     sev:'danger',  icon:'🔴' },
+  { name:'Вагітна (2 місяці)',        sev:'neutral', icon:'🤰' },
+  { name:'Зламана нога (гіпс)',       sev:'bad',     icon:'🦵' },
+  { name:'ВІЛ-позитивний (стабільно)',sev:'bad',     icon:'⚠️' },
+  { name:'Алергія на антибіотики',    sev:'ok',      icon:'💊' },
+  { name:'Безсоння хронічне',         sev:'bad',     icon:'😴' },
+  { name:'Туберкульоз (відкрита форма)',sev:'danger', icon:'🫁' },
+  { name:'Клаустрофобія',             sev:'bad',     icon:'😱' },
+  { name:'Посттравматичний стрес',    sev:'bad',     icon:'🧨' },
+];
+
+const HOBBIES = [
+  'Полювання та трекінг у дикій природі',
+  'Городництво та збір врожаю',
+  'Радіоаматорство та зв\'язок',
+  'Рукопашний бій та самооборона',
+  'Медицина першої допомоги',
+  'Приготування їжі та консервація',
+  'Столярство та будівництво',
+  'Хімія та виготовлення ліків',
+  'Риболовля та підводне полювання',
+  'Астрономія та навігація',
+  'Шиття та пошиття одягу',
+  'Кресленик та архітектура',
+  'Музика та культурне збагачення',
+  'Психологічний коучинг',
+];
+
+const BAGGAGE = [
+  'Валіза медикаментів на 3 роки',
+  'Набір насіння 40 культур',
+  'Зброя (пістолет + 200 набоїв)',
+  'Переносний генератор + паливо',
+  'Комплект хімічних фільтрів води',
+  'Ноутбук з енциклопедіями офлайн',
+  'Набір хірургічних інструментів',
+  'Запас ліофілізованої їжі на рік',
+  'Компактна сонячна панель 200Вт',
+  'Набір будівельних інструментів',
+  'Дозиметр та захисний костюм',
+  'Акумулятор та радіостанція',
+  'Книги з виживання (20 томів)',
+  'Запас рідкісних антибіотиків',
+];
+
+const SKILLS = [
+  'Може провести операцію без анестезії',
+  'Знає як запустити ядерний реактор',
+  'Вирощує їжу в закритому просторі',
+  'Стріляє без промаху з будь-якої зброї',
+  'Зупиняє паніку і конфлікти словом',
+  'Ремонтує техніку з металобрухту',
+  'Готує їжу з 5 різних інгредієнтів',
+  'Знає всі мутації бактерій і вірусів',
+  'Встановлює та обходить охорону',
+  'Навчає дорослих за 2 тижні',
+  'Може зламати будь-яку систему',
+  'Приймає пологи в польових умовах',
+  'Визначає їстівні рослини на дотик',
+  'Утримує бойовий дух навіть у безвиході',
+];
+
+const FACTS = [
+  'Ви єдиний, хто знає точний код від бункера.',
+  'Ви приховуєте, що вже відчуваєте симптоми зараження.',
+  'Вас розшукує влада за військовий злочин.',
+  'Ви страждаєте від клаустрофобії, але приховуєте це.',
+  'У вас є секретний прохід до резервного бункера.',
+  'Ви таємно закохані в одного з гравців.',
+  'Ви є агентом, і ваше завдання — вижити за будь-яку ціну.',
+  'Ви знаєте, що хтось тут бреше про свою роль.',
+  'Ваша навичка набагато потужніша, ніж ви зізнаєтесь.',
+  'Ви несете відповідальність за цю катастрофу.',
+  'У вашому багажі сховано щось незаконне, але дуже корисне.',
+  'Ви готові пожертвувати будь-ким заради виживання.',
+  'Ви єдиний, хто знає, як зв\'язатися з іншим бункером.',
+  'Ваш стан здоров\'я значно кращий (або гірший), ніж сказано.',
+];
+
+const SCENARIOS = [
+  {
+    emoji:'☢️', name:'Ядерна катастрофа',
+    alert:'🔴 Рівень радіації — смертельний',
+    desc:'Ланцюгова реакція на Запорізькій АЕС вийшла з-під контролю. Радіоактивна хмара накриває 70% території. Поверхня землі буде непридатною для life протягом 50+ років. У вас є 20 хвилин, щоб вирішити хто увійде до бункера.',
+  },
+  {
+    emoji:'🦠', name:'Вірус-пандемія',
+    alert:'🟠 Смертність 94%',
+    desc:'Невідомий вірус мутував і поширюється по повітрю. Він вбиває за 72 години. Жодних ліків немає. Бункер — єдине місце з системою фільтрації повітря, яка зупинить зараження. Вирішіть хто достатньо цінний для виживання людства.',
+  },
+  {
+    emoji:'☄️', name:'Астероїдний удар',
+    alert:'🔴 Кінець цивілізації',
+    desc:'Астероїд діаметром 2.3 км врізався в Атлантичний океан. Ядерна зима розпочнеться через 6 годин. Температура впаде до −60°C. Бункер розрахований на 50 років автономної роботи. Тільки найцінніші для виживання людства увійдуть усередину.',
+  },
+  {
+    emoji:'🌊', name:'Глобальний потоп',
+    alert:'🔵 Рівень води піднімається',
+    desc:'Антарктичний льодовик зруйнувався. Рівень океану підніметься на 80 метрів за 48 годин. 95% суші буде затоплено. Бункер знаходиться на висоті 3000м і оснащений технологіями для освоєння нового світу. Хто заслуговує нового шансу?',
+  },
+];
+
+/* ─── STATE ─────────────────────────────────── */
+let G = {};
+
+function initState(numPlayers, bunkerSpots, discussionSec, scenarioIdx) {
+  const players = [];
+  const shuffled = (arr) => [...arr].sort(() => Math.random() - .5);
+  const profs    = shuffled(PROFESSIONS).slice(0, numPlayers);
+  const healths  = shuffled(HEALTH).slice(0, numPlayers);
+  const hobbies  = shuffled(HOBBIES).slice(0, numPlayers);
+  const baggages = shuffled(BAGGAGE).slice(0, numPlayers);
+  const skills   = shuffled(SKILLS).slice(0, numPlayers);
+  const facts    = shuffled(FACTS).slice(0, numPlayers);
+
+  for (let i = 0; i < numPlayers; i++) {
+    players.push({
+      id: i + 1,
+      profession: profs[i],
+      health: healths[i],
+      hobby: hobbies[i],
+      baggage: baggages[i],
+      skill: skills[i],
+      fact: facts[i],
+      eliminated: false,
+      totalVotesReceived: 0,
+    });
+  }
+
+  G = {
+    numPlayers, bunkerSpots, discussionSec, scenarioIdx,
+    players,
+    round: 1,
+    phase: 'setup',
+    votes: {},       // voterId (1-based) -> targetId (1-based)
+    currentVoterIdx: 0,
+    timerInterval: null,
+    timerLeft: discussionSec,
+  };
+}
+
+/* ─── HELPERS ─────────────────────────────────── */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function activePlayers() {
+  return G.players.filter(p => !p.eliminated);
+}
+
+function fmt(sec) {
+  return `${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;
+}
+
+function healthBadge(sev) {
+  const map = { good:'badge-green', ok:'badge-green', bad:'badge-amber', danger:'badge-red', neutral:'badge-green' };
+  const label = { good:'Здоровий', ok:'Прийнятно', bad:'Проблема', danger:'НЕБЕЗПЕКА', neutral:'Особливе' };
+  return `<span class="badge ${map[sev]||'badge-amber'}">${label[sev]||sev}</span>`;
+}
+
+/* ─── SETUP SCREEN ─────────────────────────────── */
+let setupPlayers = 6, setupSpots = 3, setupTimer = 180, setupScenario = 0;
+
+function updateSetupUI() {
+  document.getElementById('valPlayers').textContent = setupPlayers;
+  document.getElementById('valSpots').textContent   = setupSpots;
+  setupSpots = Math.min(setupSpots, setupPlayers - 1);
+  document.getElementById('valSpots').textContent   = setupSpots;
+  const half = Math.ceil(setupPlayers / 2);
+  document.getElementById('spotsHint').textContent  = `рекомендовано: ${half}`;
+}
+
+document.getElementById('btnDecPlayers').onclick = () => { if(setupPlayers>2){setupPlayers--;updateSetupUI();} };
+document.getElementById('btnIncPlayers').onclick = () => { if(setupPlayers<14){setupPlayers++;updateSetupUI();} };
+document.getElementById('btnDecSpots').onclick   = () => { if(setupSpots>1){setupSpots--;updateSetupUI();} };
+document.getElementById('btnIncSpots').onclick   = () => { if(setupSpots<setupPlayers-1){setupSpots++;updateSetupUI();} };
+
+document.getElementById('timerOptions').addEventListener('click', e => {
+  const btn = e.target.closest('.timer-opt');
+  if (!btn) return;
+  document.querySelectorAll('.timer-opt').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  setupTimer = +btn.dataset.val;
+});
+
+document.getElementById('scenarioOptions').addEventListener('click', e => {
+  const btn = e.target.closest('.scen-opt');
+  if (!btn) return;
+  document.querySelectorAll('.scen-opt').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  setupScenario = btn.dataset.val === 'random' ? Math.floor(Math.random() * SCENARIOS.length) : +btn.dataset.val;
+});
+
+document.getElementById('btnStartGame').onclick = () => {
+  initState(setupPlayers, setupSpots, setupTimer, setupScenario);
+  showScenario();
+};
+
+updateSetupUI();
+
+/* ─── SCENARIO SCREEN ─────────────────────────── */
+function showScenario() {
+  const sc = SCENARIOS[G.scenarioIdx];
+  document.getElementById('scenarioEmoji').textContent = sc.emoji;
+  document.getElementById('scenarioName').textContent  = sc.name;
+  document.getElementById('scenarioAlert').textContent = sc.alert;
+  document.getElementById('scenarioDesc').textContent  = sc.desc;
+  document.getElementById('sInfoPlayers').textContent  = G.numPlayers;
+  document.getElementById('sInfoSpots').textContent    = G.bunkerSpots;
+  const rounds = G.numPlayers - G.bunkerSpots;
+  document.getElementById('sInfoRounds').textContent   = rounds;
+  document.getElementById('sInfoSpots2').textContent   = G.bunkerSpots;
+  showScreen('screenScenario');
+}
+
+document.getElementById('btnToCardDeal').onclick = () => {
+  G.currentCardIdx = 0;
+  showCardForPlayer(0);
+};
+
+/* ─── CARD DEAL SCREEN ─────────────────────────── */
+function showCardForPlayer(idx) {
+  if (idx >= G.numPlayers) {
+    showDiscussion();
+    return;
+  }
+  const p = G.players[idx];
+  showCoverThen(
+    `Гравець ${p.id}`,
+    'Готові побачити свою картку?',
+    'ПОКАЗАТИ МОЮ КАРТКУ',
+    () => {
+      renderCard(p);
+      showScreen('screenCard');
+    }
+  );
+}
+
+function renderCard(p) {
+  document.getElementById('cardPlayerNum').textContent  = p.id;
+  document.getElementById('cardPlayerTotal').textContent = G.numPlayers;
+  document.getElementById('cardProfIcon').textContent   = p.profession.icon;
+  document.getElementById('cardProfName').textContent   = p.profession.name;
+  document.getElementById('cardProfDesc').textContent   = p.profession.desc;
+  document.getElementById('cardHealth').textContent     = p.health.name;
+  document.getElementById('cardHealthBadge').innerHTML  = healthBadge(p.health.sev);
+  document.getElementById('cardHobby').textContent      = p.hobby;
+  document.getElementById('cardBaggage').textContent    = p.baggage;
+  document.getElementById('cardSkill').textContent      = p.skill;
+  document.getElementById('cardFact').textContent       = p.fact;
+}
+
+document.getElementById('btnCardReady').onclick = () => {
+  const nextIdx = G.currentCardIdx + 1;
+  G.currentCardIdx = nextIdx;
+  if (nextIdx < G.numPlayers) {
+    showCoverThen(
+      `Гравець ${nextIdx + 1}`,
+      'Передайте телефон наступному гравцю',
+      'ПОКАЗАТИ МОЮ КАРТКУ',
+      () => {
+        renderCard(G.players[nextIdx]);
+        showScreen('screenCard');
+      }
+    );
+  } else {
+    showCoverThen(
+      '📋 Усі картки роздано',
+      'Починаємо обговорення!',
+      'ПОЧАТИ ОБГОВОРЕННЯ',
+      () => showDiscussion()
+    );
+  }
+};
+
+/* ─── COVER SCREEN ─────────────────────────── */
+function showCoverThen(name, text, btnText, callback) {
+  document.getElementById('coverPlayerName').textContent = name;
+  document.getElementById('coverText').textContent       = text;
+  document.getElementById('coverBtn').textContent        = btnText;
+  document.getElementById('coverScreen').classList.remove('hidden');
+  document.getElementById('coverBtn').onclick = () => {
+    document.getElementById('coverScreen').classList.add('hidden');
+    callback();
+  };
+}
+
+/* ─── DISCUSSION SCREEN ─────────────────────── */
+function showDiscussion() {
+  stopTimer();
+  const active = activePlayers();
+  const toElim = active.length - G.bunkerSpots;
+
+  document.getElementById('roundNum').textContent   = G.round;
+  document.getElementById('toElimCount').textContent = toElim;
+
+  // Active players badges
+  const cont = document.getElementById('activePlayers');
+  cont.innerHTML = active.map(p =>
+    `<span class="badge badge-green">Гравець ${p.id}</span>`
+  ).join('');
+
+  // Timer setup
+  G.timerLeft = G.discussionSec;
+  const circumf = 2 * Math.PI * 88;
+  const circle  = document.getElementById('timerCircle');
+  circle.style.strokeDasharray  = circumf;
+  circle.style.strokeDashoffset = 0;
+
+  showScreen('screenDiscussion');
+
+  G.timerInterval = setInterval(() => {
+    G.timerLeft--;
+    const prog = G.timerLeft / G.discussionSec;
+    circle.style.strokeDashoffset = circumf * (1 - prog);
+    if (prog < .33) circle.style.stroke = 'var(--red)';
+    else if (prog < .6) circle.style.stroke = 'var(--amber)';
+    else circle.style.stroke = 'var(--green)';
+    document.getElementById('timerDisplay').textContent = fmt(G.timerLeft);
+    if (G.timerLeft <= 0) {
+      stopTimer();
+      document.getElementById('timerDisplay').textContent = '0:00';
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  if (G.timerInterval) { clearInterval(G.timerInterval); G.timerInterval = null; }
+}
+
+document.getElementById('btnStartVoting').onclick = () => {
+  stopTimer();
+  startVotingRound();
+};
+
+/* ─── VOTING SCREEN ─────────────────────────── */
+function startVotingRound() {
+  G.votes = {};
+  G.currentVoterIdx = 0;
+  showVoteForCurrent();
+}
+
+function showVoteForCurrent() {
+  const active = activePlayers();
+  if (G.currentVoterIdx >= active.length) {
+    // All voted
+    processVotes();
+    return;
+  }
+  const voter = active[G.currentVoterIdx];
+  const remaining = active.length - G.currentVoterIdx;
+
+  showCoverThen(
+    `Гравець ${voter.id}`,
+    `Час голосувати. Ваш голос анонімний.\nЗалишилось проголосувати: ${remaining}`,
+    'ПРОГОЛОСУВАТИ',
+    () => {
+      renderVoteScreen(voter, active);
+      showScreen('screenVote');
+    }
+  );
+}
+
+function renderVoteScreen(voter, active) {
+  document.getElementById('voteRoundNum').textContent  = G.round;
+  document.getElementById('votePlayerNum').textContent = voter.id;
+  document.getElementById('voteProgress').textContent  =
+    `${G.currentVoterIdx} / ${active.length}`;
+
+  const list = document.getElementById('voteList');
+  list.innerHTML = '';
+  active.filter(p => p.id !== voter.id).forEach(p => {
+    const row = document.createElement('div');
+    row.className = 'player-row';
+    row.innerHTML = `
+      <div>
+        <div class="player-num">Гравець ${p.id}</div>
+        <div style="font-size:.8rem;color:var(--muted)">${p.profession.icon} ${p.profession.name}</div>
+      </div>
+      <div style="font-size:1.4rem;color:var(--red)">☠️</div>`;
+    row.onclick = () => castVote(voter, p.id, active);
+    list.appendChild(row);
+  });
+}
+
+function castVote(voter, targetId, active) {
+  G.votes[voter.id] = targetId;
+  G.currentVoterIdx++;
+
+  if (G.currentVoterIdx < active.length) {
+    const next = active[G.currentVoterIdx];
+    showCoverThen(
+      `Гравець ${next.id}`,
+      `Гравець ${voter.id} проголосував ✓\nПередайте телефон наступному`,
+      'ПРОГОЛОСУВАТИ',
+      () => {
+        renderVoteScreen(next, active);
+        showScreen('screenVote');
+      }
+    );
+  } else {
+    showCoverThen(
+      '🗳️ Голосування завершено',
+      'Рахуємо голоси...',
+      'ПОБАЧИТИ РЕЗУЛЬТАТИ',
+      () => processVotes()
+    );
+  }
+}
+
+/* ─── VOTE PROCESSING ─────────────────────────── */
+function processVotes() {
+  const active = activePlayers();
+  // Tally
+  const tally = {};
+  active.forEach(p => tally[p.id] = 0);
+  Object.values(G.votes).forEach(tid => { if(tally[tid]!==undefined) tally[tid]++; });
+
+  // Find max
+  const maxVotes = Math.max(...Object.values(tally));
+  const topIds   = Object.keys(tally).filter(id => tally[id] === maxVotes).map(Number);
+
+  let eliminated;
+  if (topIds.length === 1) {
+    eliminated = [topIds[0]];
+  } else {
+    // Tie: eliminate all tied players
+    eliminated = topIds;
+  }
+
+  eliminated.forEach(id => {
+    const p = G.players.find(p => p.id === id);
+    if (p) { p.eliminated = true; p.totalVotesReceived = tally[id]; }
+  });
+
+  showRoundResult(tally, eliminated, maxVotes, active);
+}
+
+/* ─── ROUND RESULT SCREEN ─────────────────────── */
+function showRoundResult(tally, eliminatedIds, maxVotes, activeBeforeElim) {
+  const survivors = activePlayers();
+  const isTie     = eliminatedIds.length > 1;
+  const elimNames = eliminatedIds.map(id => `Гравець ${id}`).join(', ');
+
+  document.getElementById('resultEmoji').textContent    = isTie ? '⚖️' : '💀';
+  document.getElementById('resultTitle').textContent    = isTie
+    ? `Нічия! Виходять ${elimNames}`
+    : `${elimNames} залишає бункер`;
+  document.getElementById('resultSubtitle').textContent = isTie
+    ? `По ${maxVotes} голоси — виключені всі`
+    : `Отримав ${maxVotes} голоси`;
+
+  // Vote bars
+  const bars = document.getElementById('voteBars');
+  bars.innerHTML = '';
+  const sorted = [...activeBeforeElim].sort((a,b) => (tally[b.id]||0)-(tally[a.id]||0));
+  const total  = activeBeforeElim.length;
+  sorted.forEach(p => {
+    const v    = tally[p.id] || 0;
+    const pct  = total > 0 ? Math.round(v / total * 100) : 0;
+    const most = eliminatedIds.includes(p.id);
+    bars.innerHTML += `
+      <div class="vote-bar-wrap">
+        <div class="vote-bar-label">
+          <span>${p.profession.icon} Гравець ${p.id}</span>
+          <span style="color:${most?'var(--red)':'var(--muted)'}">${v} голос${v===1?'':'ів'}</span>
+        </div>
+        <div class="vote-bar-bg">
+          <div class="vote-bar-fill${most?' most':''}" style="width:${pct}%"></div>
+        </div>
+      </div>`;
+  });
+
+  // Bunker status
+  const bstatus = document.getElementById('bunkerStatus');
+  bstatus.innerHTML = survivors.map(p =>
+    `<span class="badge badge-green">✅ Гравець ${p.id}</span>`
+  ).join('') +
+  G.players.filter(p=>p.eliminated).map(p=>
+    `<span class="badge badge-red">❌ Гравець ${p.id}</span>`
+  ).join('');
+
+  const gameOver = survivors.length <= G.bunkerSpots;
+  const btn = document.getElementById('btnAfterResult');
+  btn.textContent = gameOver ? 'ЗАВЕРШИТИ ГРУ →' : `РАУНД ${G.round + 1} →`;
+  btn.onclick = () => {
+    if (gameOver) showGameEnd();
+    else { G.round++; showDiscussion(); }
+  };
+
+  showScreen('screenRoundResult');
+}
+
+/* ─── GAME END ─────────────────────────────────── */
+function showGameEnd() {
+  const survivors = activePlayers();
+  const losers    = G.players.filter(p => p.eliminated);
+
+  document.getElementById('endTitle').textContent = `${survivors.length} з ${G.numPlayers} вижили`;
+
+  const sc = document.getElementById('survivorCards');
+  sc.innerHTML = survivors.map(p => `
+    <div class="card animate-in" style="display:flex;align-items:center;gap:14px;padding:14px">
+      <div style="font-size:2rem">${p.profession.icon}</div>
+      <div>
+        <div class="badge badge-green" style="margin-bottom:4px">Гравець ${p.id} — ВИЖИВШИЙ</div>
+        <div style="font-weight:700">${p.profession.name}</div>
+        <div style="font-size:.8rem;color:var(--muted)">${p.skill}</div>
+      </div>
+    </div>`).join('');
+
+  document.getElementById('loserBadges').innerHTML = losers.map(p =>
+    `<span class="badge badge-red">💀 Гравець ${p.id}</span>`).join('');
+
+  showScreen('screenEnd');
+}
+
+document.getElementById('btnRestart').onclick = () => {
+  setupPlayers = 6; setupSpots = 3; setupTimer = 180; setupScenario = 0;
+  updateSetupUI();
+  document.querySelectorAll('.timer-opt').forEach(b => b.classList.toggle('selected', b.dataset.val==='180'));
+  document.querySelectorAll('.scen-opt').forEach(b => b.classList.toggle('selected', b.dataset.val==='0'));
+  showScreen('screenSetup');
+};
+
+/* ─── STYLE TWEAKS for selected btn ─────────── */
+document.querySelectorAll('.timer-opt,.scen-opt').forEach(btn => {
+  btn.addEventListener('click', () => {});
+});
+
+// Dynamic selected style
+const style = document.createElement('style');
+style.textContent = `
+  .timer-opt.selected, .scen-opt.selected {
+    background: var(--green3) !important;
+    border-color: var(--green) !important;
+    color: var(--green) !important;
+  }
+`;
+document.head.appendChild(style);
+</script>
+</body>
+</html>
