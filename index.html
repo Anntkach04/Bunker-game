@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>☢️ БУНКЕР</title>
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    :root {
+      --bg:#07090a; --s1:#0d1517; --s2:#111d1f; --s3:#162022;
+      --green:#34d399; --green2:#059669; --green3:#022c22;
+      --red:#f87171; --amber:#fbbf24; --blue:#60a5fa;
+      --text:#d1fae5; --muted:#6ee7b7; --dim:#34d399;
+      --border:rgba(52,211,153,.15); --border2:rgba(52,211,153,.3);
+    }
+    body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; min-height:100dvh; }
+    .screen { display:none; min-height:100dvh; flex-direction:column; align-items:center; padding:20px 16px 32px; }
+    .screen.active { display:flex; }
+
+    h1 { font-size:2.4rem; font-weight:900; letter-spacing:.05em; }
+    h2 { font-size:1.4rem; font-weight:700; }
+    h3 { font-size:1.1rem; font-weight:600; }
+    p  { line-height:1.6; color:var(--muted); }
+
+    .btn {
+      width:100%; padding:16px; border:none; border-radius:12px; font-size:1rem;
+      font-weight:700; cursor:pointer; transition:all .15s; letter-spacing:.03em;
+    }
+    .btn-primary { background:var(--green2); color:#fff; border:1px solid var(--green); }
+    .btn-primary:active { transform:scale(.97); background:#047857; }
+    .btn-danger  { background:#7f1d1d; color:var(--red); border:1px solid var(--red); }
+    .btn-danger:active { transform:scale(.97); }
+    .btn-ghost   { background:transparent; color:var(--muted); border:1px solid var(--border2); }
+    .btn-ghost:active { transform:scale(.97); background:var(--s2); }
+    .btn + .btn  { margin-top:10px; }
+    .btn:disabled { opacity:.4; pointer-events:none; }
+
+    .card {
+      background:var(--s1); border:1px solid var(--border2); border-radius:16px;
+      padding:16px; width:100%; margin-bottom:12px;
+    }
+    .card-header { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+    .card-icon { font-size:1.6rem; line-height:1; }
+    .card-label { font-size:.7rem; font-weight:700; letter-spacing:.1em; color:var(--dim); text-transform:uppercase; }
+    .card-value { font-size:1.05rem; font-weight:600; }
+    .card-sub   { font-size:.85rem; color:var(--muted); margin-top:2px; }
+
+    .badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:.75rem; font-weight:700; }
+    .badge-green { background:var(--green3); color:var(--green); border:1px solid var(--green2); }
+    .badge-red   { background:#450a0a; color:var(--red); border:1px solid #7f1d1d; }
+    .badge-amber { background:#451a03; color:var(--amber); border:1px solid #92400e; }
+    .badge-blue  { background:#1e3a5f; color:var(--blue); border:1px solid #1d4ed8; }
+
+    .stepper { display:flex; align-items:center; gap:12px; }
+    .stepper button { width:44px; height:44px; border-radius:50%; border:1px solid var(--border2); background:var(--s2); color:var(--text); font-size:1.3rem; cursor:pointer; flex-shrink:0; }
+    .stepper button:active { background:var(--s3); }
+    .stepper-val { font-size:2rem; font-weight:900; color:var(--green); min-width:48px; text-align:center; }
+
+    .timer-ring { position:relative; display:flex; align-items:center; justify-content:center; }
+    .timer-svg  { transform:rotate(-90deg); }
+    .timer-track { fill:none; stroke:var(--s3); stroke-width:8; }
+    .timer-prog  { fill:none; stroke:var(--green); stroke-width:8; stroke-linecap:round; transition:stroke-dashoffset .9s linear, stroke .5s; }
+    .timer-num  { position:absolute; font-size:2.6rem; font-weight:900; letter-spacing:.02em; }
+
+    .player-row {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:12px 14px; background:var(--s1); border:1px solid var(--border);
+      border-radius:12px; margin-bottom:8px; cursor:pointer; transition:all .15s;
+    }
+    .player-row:active { background:var(--s2); border-color:var(--border2); }
+    .player-row.selected { border-color:var(--red); background:#1a0505; }
+    .player-row.voted    { border-color:var(--green2); opacity:.5; pointer-events:none; }
+    .player-row.eliminated { opacity:.35; pointer-events:none; text-decoration:line-through; }
+    .player-num { font-size:1rem; font-weight:700; color:var(--green); }
+
+    .vote-bar-wrap { margin-bottom:10px; }
+    .vote-bar-label { display:flex; justify-content:space-between; font-size:.85rem; margin-bottom:4px; }
+    .vote-bar-bg { background:var(--s2); border-radius:4px; height:8px; overflow:hidden; }
+    .vote-bar-fill { height:100%; border-radius:4px; background:var(--green2); transition:width .4s ease; }
+    .vote-bar-fill.most { background:var(--red); }
+
+    .sep { width:100%; height:1px; background:var(--border); margin:16px 0; }
+    .top-row { display:flex; align-items:center; justify-content:space-between; width:100%; margin-bottom:4px; }
+    .glow { text-shadow:0 0 20px var(--green), 0 0 40px var(--green2); }
+    .glow-red { text-shadow:0 0 20px var(--red); }
+    .sub-title { font-size:.85rem; color:var(--dim); letter-spacing:.08em; font-weight:600; text-transform:uppercase; }
+    .center { text-align:center; }
+    .full-center { width:100%; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; }
+    .spacer { flex:1; }
+    .small-note { font-size:.8rem; color:var(--dim); text-align:center; }
+    .phase-tag { font-size:.7rem; font-weight:700; letter-spacing:.12em; color:var(--dim); text-transform:uppercase; }
+
+    .scenario-box {
+      background:var(--s2); border:1px solid #7f1d1d; border-radius:14px;
+      padding:18px; width:100%; margin:12px 0;
+    }
+    .scenario-title { font-size:1.2rem; font-weight:800; color:var(--red); margin-bottom:8px; }
+    .scenario-text  { font-size:.9rem; color:var(--muted); line-height:1.7; }
+
+    .player-card-header {
+      background:linear-gradient(135deg,var(--s2),var(--green3));
+      border:1px solid var(--border2); border-radius:16px 16px 0 0;
+      padding:20px; text-align:center; width:100%;
+    }
+    .player-card-body { background:var(--s1); border:1px solid var(--border); border-radius:0 0 16px 16px; width:100%; padding:4px 0; }
+    .card-row { display:flex; align-items:center; gap:12px; padding:12px 16px; border-bottom:1px solid var(--border); }
+    .card-row:last-child { border-bottom:none; }
+    .card-row-icon { font-size:1.4rem; width:28px; text-align:center; flex-shrink:0; }
+    .card-row-info .label { font-size:.65rem; font-weight:700; letter-spacing:.1em; color:var(--dim); text-transform:uppercase; }
+    .card-row-info .val   { font-size:.95rem; font-weight:600; margin-top:1px; }
+    .fact-box {
+      background:linear-gradient(135deg,#1a1000,#0f1700);
+      border:1px dashed var(--amber); border-radius:12px; padding:14px 16px; margin:12px 0;
+    }
+    .fact-box .fact-label { font-size:.65rem; font-weight:700; letter-spacing:.1em; color:var(--amber); text-transform:uppercase; margin-bottom:6px; }
+    .fact-box .fact-text  { font-size:.9rem; color:#fef3c7; line-height:1.5; }
+
+    @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
+    .animate-in { animation:fadeIn .3s ease forwards; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+    .pulse { animation:pulse 1.5s infinite; }
+
+    .scroll-area { width:100%; overflow-y:auto; flex:1; }
+
+    /* ── NEW STYLES ── */
+    .input-field {
+      width:100%; padding:14px 16px;
+      background:var(--s2); border:1px solid var(--border2);
+      border-radius:12px; color:var(--text); font-size:1rem;
+      outline:none; margin-bottom:12px; letter-spacing:.03em;
+    }
+    .input-field:focus { border-color:var(--green); }
+    .input-field.code-input { font-size:1.8rem; font-weight:900; letter-spacing:.3em; text-align:center; text-transform:uppercase; }
+
+    .room-code-display {
+      font-size:3rem; font-weight:900; letter-spacing:.25em;
+      color:var(--green); text-align:center; padding:20px 16px;
+      background:var(--s2); border-radius:16px; border:2px dashed var(--green2);
+      margin:12px 0; cursor:pointer; user-select:all;
+    }
+    .room-code-hint { font-size:.75rem; color:var(--dim); text-align:center; margin-top:-8px; margin-bottom:8px; }
+
+    .lobby-player-row {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:12px 14px; background:var(--s1); border:1px solid var(--border);
+      border-radius:12px; margin-bottom:8px;
+    }
+    .lobby-player-name { font-size:1rem; font-weight:600; }
+    .lobby-player-sub  { font-size:.8rem; color:var(--muted); }
+
+    .fab {
+      position:fixed; bottom:24px; right:20px;
+      width:52px; height:52px; border-radius:50%;
+      background:var(--green2); border:2px solid var(--green);
+      color:#fff; font-size:1.3rem; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      z-index:50; box-shadow:0 4px 16px rgba(0,0,0,.5);
+    }
+    .fab.hidden { display:none; }
+
+    .card-modal {
+      position:fixed; inset:0; background:var(--bg); z-index:80;
+      display:flex; flex-direction:column; align-items:center;
+      padding:20px 16px 32px; overflow-y:auto;
+    }
+    .card-modal.hidden { display:none; }
+
+    .timer-opt.selected, .scen-opt.selected {
+      background:var(--green3) !important;
+      border-color:var(--green) !important;
+      color:var(--green) !important;
+    }
+
+    .error-box {
+      background:#450a0a; border:1px solid #7f1d1d; border-radius:12px;
+      padding:12px 16px; color:var(--red); font-size:.9rem; margin-bottom:12px;
+      display:none;
+    }
+    .error-box.visible { display:block; }
+
+    .waiting-anim { font-size:2rem; text-align:center; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN: LANDING
+══════════════════════════════════════════════ -->
+<div class="screen active" id="screenLanding">
+  <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1">
+    <div class="full-center">
+      <div style="font-size:4rem">☢️</div>
+      <h1 class="glow">БУНКЕР</h1>
+      <p class="sub-title">гра на виживання</p>
+    </div>
+    <button class="btn btn-primary" id="btnGoCreate" style="font-size:1.1rem;padding:18px">🏠 Створити кімнату</button>
+    <button class="btn btn-ghost" id="btnGoJoin" style="margin-top:10px;font-size:1.1rem;padding:18px">🔗 Приєднатись до гри</button>
+    <div style="height:16px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN: CREATE (host setup)
+══════════════════════════════════════════════ -->
+<div class="screen" id="screenCreate">
+  <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:0;flex:1">
+    <div style="text-align:center;padding:24px 0 16px">
+      <div class="phase-tag">НАЛАШТУВАННЯ ГРИ</div>
+      <h2 style="margin-top:8px">Нова кімната</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="margin-bottom:8px">👤 Ваше ім'я</div>
+      <input class="input-field" id="hostName" placeholder="Як вас звати?" maxlength="20" style="margin-bottom:0">
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="margin-bottom:12px">👥 Кількість гравців</div>
+      <div class="stepper">
+        <button id="btnDecPlayers">−</button>
+        <div class="stepper-val" id="valPlayers">6</div>
+        <button id="btnIncPlayers">+</button>
+        <span style="color:var(--muted);font-size:.85rem">від 2 до 14</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="margin-bottom:12px">🚪 Місць у бункері</div>
+      <div class="stepper">
+        <button id="btnDecSpots">−</button>
+        <div class="stepper-val" id="valSpots">3</div>
+        <button id="btnIncSpots">+</button>
+        <span style="color:var(--muted);font-size:.85rem" id="spotsHint"></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="margin-bottom:12px">⏱ Час обговорення</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="timerOptions">
+        <button class="btn btn-ghost timer-opt" data-val="90">1:30</button>
+        <button class="btn btn-ghost timer-opt selected" data-val="180">3:00</button>
+        <button class="btn btn-ghost timer-opt" data-val="300">5:00</button>
+        <button class="btn btn-ghost timer-opt" data-val="420">7:00</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="margin-bottom:12px">🌋 Сценарій катастрофи</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="scenarioOptions">
+        <button class="btn btn-ghost scen-opt selected" data-val="0">☢️ Ядерна</button>
+        <button class="btn btn-ghost scen-opt" data-val="1">🦠 Пандемія</button>
+        <button class="btn btn-ghost scen-opt" data-val="2">☄️ Астероїд</button>
+        <button class="btn btn-ghost scen-opt" data-val="3">🌊 Потоп</button>
+        <button class="btn btn-ghost scen-opt" data-val="random" style="grid-column:span 2">🎲 Випадковий</button>
+      </div>
+    </div>
+
+    <div class="error-box" id="createError"></div>
+    <div class="spacer"></div>
+    <button class="btn btn-primary" id="btnCreateRoom" style="font-size:1.1rem;padding:18px">СТВОРИТИ КІМНАТУ →</button>
+    <button class="btn btn-ghost" id="btnBackToLanding" style="margin-top:10px">← Назад</button>
+    <div style="height:16px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN: JOIN
+══════════════════════════════════════════════ -->
+<div class="screen" id="screenJoin">
+  <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1">
+    <div style="text-align:center;padding:32px 0 24px">
+      <div style="font-size:3rem;margin-bottom:8px">🔗</div>
+      <div class="phase-tag">ПРИЄДНАТИСЬ</div>
+      <h2 style="margin-top:8px">Вхід до кімнати</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="margin-bottom:8px">🔑 Код кімнати</div>
+      <input class="input-field code-input" id="joinCode" placeholder="XXXX" maxlength="4" style="margin-bottom:0">
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="margin-bottom:8px">👤 Ваше ім'я</div>
+      <input class="input-field" id="joinName" placeholder="Як вас звати?" maxlength="20" style="margin-bottom:0">
+    </div>
+
+    <div class="error-box" id="joinError"></div>
+    <div class="spacer"></div>
+    <button class="btn btn-primary" id="btnJoinRoom" style="font-size:1.1rem;padding:18px">ПРИЄДНАТИСЬ →</button>
+    <button class="btn btn-ghost" id="btnBackToLanding2" style="margin-top:10px">← Назад</button>
+    <div style="height:16px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN: LOBBY (host + players)
+══════════════════════════════════════════════ -->
+<div class="screen" id="screenLobby">
+  <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1">
+    <div style="text-align:center;padding:24px 0 16px">
+      <div class="phase-tag">КІМ­НА­ТА</div>
+      <h2 style="margin-top:6px">Чекаємо гравців</h2>
+    </div>
+
+    <div class="card" style="text-align:center">
+      <div class="card-label" style="margin-bottom:4px">Код кімнати — покажіть іншим</div>
+      <div class="room-code-display" id="lobbyCode" title="Натисніть щоб скопіювати"></div>
+      <div class="room-code-hint">Натисніть на код щоб скопіювати</div>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="margin-bottom:12px">👥 Гравці (<span id="lobbyPlayerCount">0</span>/<span id="lobbyPlayerTotal">?</span>)</div>
+      <div id="lobbyPlayerList"></div>
+      <div id="lobbyWaitMsg" style="font-size:.85rem;color:var(--muted);text-align:center;padding:8px 0" class="pulse">Чекаємо на гравців...</div>
+    </div>
+
+    <div class="card" id="lobbySettingsCard" style="display:none">
+      <div class="card-label" style="margin-bottom:8px">⚙️ Налаштування</div>
+      <div style="font-size:.85rem;color:var(--muted);line-height:2" id="lobbySettings"></div>
+    </div>
+
+    <div class="spacer"></div>
+    <button class="btn btn-primary" id="btnStartGame" style="font-size:1.1rem;padding:18px;display:none">ПОЧАТИ ГРУ →</button>
+    <div id="lobbyPlayerMsg" style="text-align:center;font-size:.9rem;color:var(--muted);padding:8px;display:none">
+      Чекаємо поки хост почне гру...
+    </div>
+    <div style="height:16px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN: MY CARD
+══════════════════════════════════════════════ -->
+<div class="screen" id="screenMyCard">
+  <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1">
+    <div style="text-align:center;padding:20px 0 12px">
+      <div class="phase-tag">ВАША КАРТКА</div>
+      <div style="margin-top:6px;font-size:.9rem;color:var(--muted)">Запам'ятайте — більше не з'явиться</div>
+    </div>
+
+    <div class="player-card-header">
+      <div style="font-size:2.5rem" id="myCardProfIcon"></div>
+      <div style="font-size:.7rem;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:4px">Ваша роль</div>
+      <div style="font-size:1.3rem;font-weight:800;margin-top:2px" id="myCardProfName"></div>
+      <div style="font-size:.85rem;color:var(--muted);margin-top:4px" id="myCardProfDesc"></div>
+    </div>
+
+    <div class="player-card-body">
+      <div class="card-row">
+        <div class="card-row-icon">❤️</div>
+        <div class="card-row-info">
+          <div class="label">Стан здоров'я</div>
+          <div class="val" id="myCardHealth"></div>
+        </div>
+        <div id="myCardHealthBadge"></div>
+      </div>
+      <div class="card-row">
+        <div class="card-row-icon">🎯</div>
+        <div class="card-row-info">
+          <div class="label">Хобі</div>
+          <div class="val" id="myCardHobby"></div>
+        </div>
+      </div>
+      <div class="card-row">
+        <div class="card-row-icon">🎒</div>
+        <div class="card-row-info">
+          <div class="label">Багаж</div>
+          <div class="val" id="myCardBaggage"></div>
+        </div>
+      </div>
+      <div class="card-row" style="border-bottom:none">
+        <div class="card-row-icon">⚡</div>
+        <div class="card-row-info">
+          <div class="label">Унікальна навичка</div>
+          <div class="val" id="myCardSkill"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fact-box">
+      <div class="fact-label">🔐 Таємний факт (тільки для вас)</div>
+      <div class="fact-text" id="myCardFact"></div>
+    </div>
+
+    <div class="spacer"></div>
+    <button class="btn btn-primary" id="btnCardReady" style="font-size:1.05rem;padding:18px">Я ЗАПАМ'ЯТАВ ✓</button>
+    <div id="hostStartDiscussionWrap" style="display:none;margin-top:10px">
+      <p class="small-note" style="margin-bottom:10px">Зачекайте поки всі переглянуть свої картки</p>
+      <button class="btn btn-ghost" id="btnHostStartDiscussion">ПОЧАТИ ОБГОВОРЕННЯ →</button>
+    </div>
+    <div id="playerWaitCardMsg" style="display:none;text-align:center;font-size:.9rem;color:var(--muted);padding:12px" class="pulse">
+      Чекаємо поки хост почне обговорення...
+    </div>
+    <div style="height:16px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN: DISCUSSION
+══════════════════════════════════════════════ -->
+<div class="screen" id="screenDiscussion">
+  <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1;align-items:center">
+    <div style="text-align:center;padding:20px 0 8px;width:100%">
+      <div class="phase-tag">РАУНД <span id="discRoundNum"></span></div>
+      <h2 style="margin-top:6px">Час обговорення</h2>
+    </div>
+
+    <div class="card" style="text-align:center;padding:12px;width:100%">
+      <div style="font-size:.85rem;color:var(--muted);margin-bottom:8px">⚠️ Ще потрібно прибрати <strong style="color:var(--red)" id="discToElimCount"></strong> гравців</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center" id="discActivePlayers"></div>
+    </div>
+
+    <div style="margin:16px 0">
+      <div class="timer-ring">
+        <svg class="timer-svg" width="200" height="200" viewBox="0 0 200 200">
+          <circle class="timer-track" cx="100" cy="100" r="88"/>
+          <circle class="timer-prog" id="discTimerCircle" cx="100" cy="100" r="88"/>
+        </svg>
+        <div class="timer-num" id="discTimerDisplay">3:00</div>
+      </div>
+    </div>
+
+    <div class="card" style="width:100%">
+      <div class="card-label" style="margin-bottom:8px">💡 Правила обговорення</div>
+      <ul style="font-size:.85rem;color:var(--muted);line-height:2;padding-left:16px">
+        <li>Розкажіть про свою роль та навички</li>
+        <li>Переконайте інших взяти вас у бункер</li>
+        <li>Ставте питання іншим гравцям</li>
+        <li>Таємний факт можна приховати або розкрити</li>
+      </ul>
+    </div>
+
+    <div class="spacer"></div>
+    <button class="btn btn-primary" id="btnHostGoVote" style="font-size:1.05rem;padding:18px;width:100%;display:none">ПЕРЕЙТИ ДО ГОЛОСУВАННЯ</button>
+    <div id="discPlayerMsg" style="text-align:center;font-size:.9rem;color:var(--muted);padding:8px;display:none">
+      Чекайте команди від хоста
+    </div>
+    <div style="height:16px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN: VOTE
+══════════════════════════════════════════════ -->
+<div class="screen" id="screenVote">
+  <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1">
+    <div style="text-align:center;padding:20px 0 12px">
+      <div class="phase-tag">ГОЛОСУВАННЯ • РАУНД <span id="voteRoundNum"></span></div>
+      <h2 style="margin-top:6px">Хто має залишити бункер?</h2>
+      <p style="margin-top:4px;font-size:.9rem">Ваш голос анонімний</p>
+    </div>
+
+    <div style="flex:1;overflow-y:auto;padding:4px 0" id="voteList"></div>
+    <div style="height:16px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN: VOTE WAIT
+══════════════════════════════════════════════ -->
+<div class="screen" id="screenVoteWait">
+  <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1">
+    <div class="full-center">
+      <div class="waiting-anim">🗳️</div>
+      <h2 id="voteWaitTitle">Ваш голос прийнято ✓</h2>
+      <p id="voteWaitMsg" class="pulse" style="text-align:center">Чекаємо на інших гравців...</p>
+      <div id="voteWaitProgress" style="font-size:.9rem;color:var(--dim)"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN: ROUND RESULT
+══════════════════════════════════════════════ -->
+<div class="screen" id="screenRoundResult">
+  <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1;align-items:center">
+    <div style="text-align:center;padding:28px 0 16px">
+      <div style="font-size:3rem" id="resultEmoji">💀</div>
+      <div class="phase-tag" style="margin-top:8px">РЕЗУЛЬТАТИ ГОЛОСУВАННЯ</div>
+      <h2 style="margin-top:8px;color:var(--red)" id="resultTitle"></h2>
+      <p style="margin-top:6px;font-size:.9rem" id="resultSubtitle"></p>
+    </div>
+
+    <div class="card" style="width:100%">
+      <div class="card-label" style="margin-bottom:12px">📊 Розподіл голосів</div>
+      <div id="resultVoteBars"></div>
+    </div>
+
+    <div class="card" style="width:100%;text-align:center">
+      <div class="card-label" style="margin-bottom:8px">🏠 Стан бункера</div>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap" id="resultBunkerStatus"></div>
+    </div>
+
+    <div class="spacer"></div>
+    <button class="btn btn-primary" id="btnHostAfterResult" style="font-size:1.05rem;padding:18px;width:100%;display:none"></button>
+    <div id="resultPlayerMsg" style="text-align:center;font-size:.9rem;color:var(--muted);padding:8px;display:none">
+      Чекаємо наступного раунду...
+    </div>
+    <div style="height:16px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN: GAME END
+══════════════════════════════════════════════ -->
+<div class="screen" id="screenEnd">
+  <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1;align-items:center">
+    <div style="text-align:center;padding:32px 0 20px">
+      <div style="font-size:3.5rem" id="endEmoji">🏆</div>
+      <div class="phase-tag" style="margin-top:8px">ГРАВЦІ У БУНКЕРІ</div>
+      <h1 style="margin-top:8px;font-size:1.8rem" id="endTitle" class="glow">ВИЖИВШІ</h1>
+    </div>
+
+    <div style="width:100%;margin-bottom:12px" id="survivorCards"></div>
+
+    <div class="card" style="width:100%">
+      <div class="card-label" style="margin-bottom:8px">💀 Залишились зовні</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap" id="loserBadges"></div>
+    </div>
+
+    <div class="spacer"></div>
+    <button class="btn btn-ghost" id="btnRestart" style="font-size:1rem;padding:16px;width:100%">🔄 Грати знову</button>
+    <div style="height:16px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     CARD MODAL (FAB)
+══════════════════════════════════════════════ -->
+<div class="card-modal hidden" id="cardModal">
+  <div style="width:100%;max-width:420px">
+    <div style="text-align:center;padding:12px 0 16px">
+      <div class="phase-tag">МОЯ КАРТКА</div>
+    </div>
+    <div class="player-card-header">
+      <div style="font-size:2.5rem" id="modalProfIcon"></div>
+      <div style="font-size:.7rem;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:4px">Ваша роль</div>
+      <div style="font-size:1.3rem;font-weight:800;margin-top:2px" id="modalProfName"></div>
+      <div style="font-size:.85rem;color:var(--muted);margin-top:4px" id="modalProfDesc"></div>
+    </div>
+    <div class="player-card-body">
+      <div class="card-row">
+        <div class="card-row-icon">❤️</div>
+        <div class="card-row-info">
+          <div class="label">Стан здоров'я</div>
+          <div class="val" id="modalHealth"></div>
+        </div>
+        <div id="modalHealthBadge"></div>
+      </div>
+      <div class="card-row">
+        <div class="card-row-icon">🎯</div>
+        <div class="card-row-info"><div class="label">Хобі</div><div class="val" id="modalHobby"></div></div>
+      </div>
+      <div class="card-row">
+        <div class="card-row-icon">🎒</div>
+        <div class="card-row-info"><div class="label">Багаж</div><div class="val" id="modalBaggage"></div></div>
+      </div>
+      <div class="card-row" style="border-bottom:none">
+        <div class="card-row-icon">⚡</div>
+        <div class="card-row-info"><div class="label">Унікальна навичка</div><div class="val" id="modalSkill"></div></div>
+      </div>
+    </div>
+    <div class="fact-box">
+      <div class="fact-label">🔐 Таємний факт</div>
+      <div class="fact-text" id="modalFact"></div>
+    </div>
+    <button class="btn btn-ghost" id="btnCloseModal" style="margin-top:8px">Закрити</button>
+    <div style="height:24px"></div>
+  </div>
+</div>
+
+<!-- FAB Button -->
+<button class="fab hidden" id="fabCard" title="Моя картка">📋</button>
+
+<!-- ══════════════════════════════════════════════
+     FIREBASE SDK
+══════════════════════════════════════════════ -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   FIREBASE CONFIG
+   1. Йди на https://console.firebase.google.com
+   2. Створи проект → Realtime Database → Створити базу даних
+   3. Правила (Rules): { "rules": { ".read": true, ".write": true } }
+   4. Встав свій конфіг нижче
+═══════════════════════════════════════════════════════ */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCVttGHSFNgKZOLseYJ6tWTIxS1I4E8jQ8",
+  authDomain: "bunker-game-67f85.firebaseapp.com",
+  databaseURL: "https://bunker-game-67f85-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "bunker-game-67f85",
+  storageBucket: "bunker-game-67f85.firebasestorage.app",
+  messagingSenderId: "193182486136",
+  appId: "1:193182486136:web:da9a40ed0d955f016f678d",
+  measurementId: "G-CT1VDBN24Z"
+};
+
+/* ─── DATA ─────────────────────────────────── */
+const PROFESSIONS = [
+  { name:'Хірург',              icon:'🏥', desc:'Досвідчений лікар з операційної' },
+  { name:'Інженер-ядерник',     icon:'⚛️', desc:'Обслуговує ядерні реактори' },
+  { name:'Агроном',             icon:'🌾', desc:'Вирощує їжу в будь-яких умовах' },
+  { name:'Військовий',          icon:'🪖', desc:'Бойовий досвід і знання зброї' },
+  { name:'Психолог',            icon:'🧠', desc:'Підтримує психологічний клімат' },
+  { name:'Інженер-механік',     icon:'🔧', desc:'Ремонтує та будує все підряд' },
+  { name:'Кухар',               icon:'👨‍🍳', desc:'Може нагодувати з нічого' },
+  { name:'Біолог',              icon:'🔬', desc:'Знавець флори, фауни і мутацій' },
+  { name:'Поліцейський',        icon:'🚔', desc:'Підтримує порядок і безпеку' },
+  { name:'Вчитель',             icon:'📚', desc:'Передає знання наступним поколінням' },
+  { name:'Програміст',          icon:'💻', desc:'Керує системами і технікою' },
+  { name:'Акушер-гінеколог',    icon:'👶', desc:'Допомагає народжувати нове покоління' },
+  { name:'Ветеринар',           icon:'🐕', desc:'Лікує тварин, придатний і для людей' },
+  { name:'Священик',            icon:'⛪', desc:'Духовна підтримка і моральний авторитет' },
+];
+
+const HEALTH = [
+  { name:'Абсолютно здоровий',         sev:'good' },
+  { name:'Легка короткозорість',        sev:'ok' },
+  { name:'Хронічна мігрень',           sev:'bad' },
+  { name:'Цукровий діабет 2 типу',     sev:'bad' },
+  { name:'Хронічна астма',             sev:'bad' },
+  { name:'Ниркова недостатність',      sev:'danger' },
+  { name:'Вагітна (2 місяці)',         sev:'neutral' },
+  { name:'Зламана нога (гіпс)',        sev:'bad' },
+  { name:'ВІЛ-позитивний (стабільно)', sev:'bad' },
+  { name:'Алергія на антибіотики',     sev:'ok' },
+  { name:'Безсоння хронічне',          sev:'bad' },
+  { name:'Туберкульоз (відкрита форма)',sev:'danger' },
+  { name:'Клаустрофобія',              sev:'bad' },
+  { name:'Посттравматичний стрес',     sev:'bad' },
+];
+
+const HOBBIES = [
+  'Полювання та трекінг у дикій природі',
+  'Городництво та збір врожаю',
+  'Радіоаматорство та зв\'язок',
+  'Рукопашний бій та самооборона',
+  'Медицина першої допомоги',
+  'Приготування їжі та консервація',
+  'Столярство та будівництво',
+  'Хімія та виготовлення ліків',
+  'Риболовля та підводне полювання',
+  'Астрономія та навігація',
+  'Шиття та пошиття одягу',
+  'Кресленик та архітектура',
+  'Музика та культурне збагачення',
+  'Психологічний коучинг',
+];
+
+const BAGGAGE = [
+  'Валіза медикаментів на 3 роки',
+  'Набір насіння 40 культур',
+  'Зброя (пістолет + 200 набоїв)',
+  'Переносний генератор + паливо',
+  'Комплект хімічних фільтрів води',
+  'Ноутбук з енциклопедіями офлайн',
+  'Набір хірургічних інструментів',
+  'Запас ліофілізованої їжі на рік',
+  'Компактна сонячна панель 200Вт',
+  'Набір будівельних інструментів',
+  'Дозиметр та захисний костюм',
+  'Акумулятор та радіостанція',
+  'Книги з виживання (20 томів)',
+  'Запас рідкісних антибіотиків',
+];
+
+const SKILLS = [
+  'Може провести операцію без анестезії',
+  'Знає як запустити ядерний реактор',
+  'Вирощує їжу в закритому просторі',
+  'Стріляє без промаху з будь-якої зброї',
+  'Зупиняє паніку і конфлікти словом',
+  'Ремонтує техніку з металобрухту',
+  'Готує їжу з 5 різних інгредієнтів',
+  'Знає всі мутації бактерій і вірусів',
+  'Встановлює та обходить охорону',
+  'Навчає дорослих за 2 тижні',
+  'Може зламати будь-яку систему',
+  'Приймає пологи в польових умовах',
+  'Визначає їстівні рослини на дотик',
+  'Утримує бойовий дух навіть у безвиході',
+];
+
+const FACTS = [
+  'Ви єдиний, хто знає точний код від бункера.',
+  'Ви приховуєте, що вже відчуваєте симптоми зараження.',
+  'Вас розшукує влада за військовий злочин.',
+  'Ви страждаєте від клаустрофобії, але приховуєте це.',
+  'У вас є секретний прохід до резервного бункера.',
+  'Ви таємно закохані в одного з гравців.',
+  'Ви є агентом, і ваше завдання — вижити за будь-яку ціну.',
+  'Ви знаєте, що хтось тут бреше про свою роль.',
+  'Ваша навичка набагато потужніша, ніж ви зізнаєтесь.',
+  'Ви несете відповідальність за цю катастрофу.',
+  'У вашому багажі сховано щось незаконне, але дуже корисне.',
+  'Ви готові пожертвувати будь-ким заради виживання.',
+  'Ви єдиний, хто знає, як зв\'язатися з іншим бункером.',
+  'Ваш стан здоров\'я значно кращий (або гірший), ніж сказано.',
+];
+
+const SCENARIOS = [
+  {
+    emoji:'☢️', name:'Ядерна катастрофа',
+    alert:'🔴 Рівень радіації — смертельний',
+    desc:'Ланцюгова реакція на Запорізькій АЕС вийшла з-під контролю. Радіоактивна хмара накриває 70% території. Поверхня землі буде непридатною для life протягом 50+ років.',
+  },
+  {
+    emoji:'🦠', name:'Вірус-пандемія',
+    alert:'🟠 Смертність 94%',
+    desc:'Невідомий вірус мутував і поширюється по повітрю. Він вбиває за 72 години. Жодних ліків немає. Бункер — єдине місце з системою фільтрації повітря, яка зупинить зараження.',
+  },
+  {
+    emoji:'☄️', name:'Астероїдний удар',
+    alert:'🔴 Кінець цивілізації',
+    desc:'Астероїд діаметром 2.3 км врізався в Атлантичний океан. Ядерна зима розпочнеться через 6 годин. Температура впаде до −60°C. Бункер розрахований на 50 років автономної роботи.',
+  },
+  {
+    emoji:'🌊', name:'Глобальний потоп',
+    alert:'🔵 Рівень води піднімається',
+    desc:'Антарктичний льодовик зруйнувався. Рівень океану підніметься на 80 метрів за 48 годин. 95% суші буде затоплено. Бункер знаходиться на висоті 3000м.',
+  },
+];
+
+/* ─── APP STATE ─────────────────────────────── */
+let db;
+let myUid       = localStorage.getItem('bunker_uid') || generateUid();
+let myRoomCode  = null;
+let isHost      = false;
+let roomRef     = null;
+let roomListener= null;
+let myCard      = null;   // { profIdx, healthIdx, hobbyIdx, baggageIdx, skillIdx, factIdx }
+let timerInterval = null;
+let cardSeen    = false;
+
+localStorage.setItem('bunker_uid', myUid);
+
+/* ─── SETUP STATE (create screen) ─────────── */
+let setupPlayers = 6, setupSpots = 3, setupTimer = 180, setupScenario = 0;
+
+/* ─── HELPERS ─────────────────────────────── */
+function generateUid() {
+  return Math.random().toString(36).slice(2, 10) + Math.random().toString(36).slice(2, 10);
+}
+
+function generateRoomCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  return Array.from({length:4}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+}
+
+function shuffled(arr) { return [...arr].sort(() => Math.random() - .5); }
+
+function fmt(sec) {
+  return `${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;
+}
+
+function healthBadge(sev) {
+  const map   = { good:'badge-green', ok:'badge-green', bad:'badge-amber', danger:'badge-red', neutral:'badge-green' };
+  const label = { good:'Здоровий', ok:'Прийнятно', bad:'Проблема', danger:'НЕБЕЗПЕКА', neutral:'Особливе' };
+  return `<span class="badge ${map[sev]||'badge-amber'}">${label[sev]||sev}</span>`;
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function showError(elId, msg) {
+  const el = document.getElementById(elId);
+  el.textContent = msg;
+  el.classList.add('visible');
+}
+
+function hideError(elId) {
+  document.getElementById(elId).classList.remove('visible');
+}
+
+function showFab(visible) {
+  document.getElementById('fabCard').classList.toggle('hidden', !visible);
+}
+
+function stopTimer() {
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+}
+
+function getActivePlayers(players) {
+  return Object.entries(players || {})
+    .filter(([, p]) => !p.eliminated)
+    .sort((a, b) => a[1].order - b[1].order);
+}
+
+/* ─── FIREBASE INIT ─────────────────────────── */
+function isPlaceholderConfig() {
+  return FIREBASE_CONFIG.apiKey.startsWith('REPLACE') ||
+         FIREBASE_CONFIG.databaseURL.includes('REPLACE');
+}
+
+function initFirebase() {
+  if (isPlaceholderConfig()) return true; // defer error to when user tries to create/join
+  try {
+    firebase.initializeApp(FIREBASE_CONFIG);
+    db = firebase.database();
+    return true;
+  } catch(e) {
+    if (e.code === 'app/duplicate-app') {
+      db = firebase.database();
+      return true;
+    }
+    alert('Помилка Firebase: ' + e.message);
+    return false;
+  }
+}
+
+/* ─── ROOM FUNCTIONS ─────────────────────────── */
+async function createRoom() {
+  if (isPlaceholderConfig()) {
+    showError('createError',
+      '⚠️ Firebase не налаштовано! Відкрий index.html у редакторі, знайди FIREBASE_CONFIG і встав свій конфіг з console.firebase.google.com');
+    return;
+  }
+  if (!db) {
+    try {
+      firebase.initializeApp(FIREBASE_CONFIG);
+      db = firebase.database();
+    } catch(e) {
+      if (e.code === 'app/duplicate-app') { db = firebase.database(); }
+      else { showError('createError', 'Помилка Firebase: ' + e.message); return; }
+    }
+  }
+
+  const name = document.getElementById('hostName').value.trim();
+  if (!name) { showError('createError', 'Введіть ваше ім\'я'); return; }
+  hideError('createError');
+
+  const btn = document.getElementById('btnCreateRoom');
+  btn.disabled = true;
+  btn.textContent = 'Створюємо кімнату...';
+
+  const code = generateRoomCode();
+  const scenarioIdx = setupScenario === 'random'
+    ? Math.floor(Math.random() * SCENARIOS.length)
+    : +setupScenario;
+
+  const roomData = {
+    config: {
+      spots: setupSpots,
+      timerSec: setupTimer,
+      scenarioIdx,
+      hostId: myUid,
+      totalPlayers: setupPlayers,
+    },
+    phase: 'lobby',
+    round: 1,
+    players: {
+      [myUid]: {
+        name,
+        order: 1,
+        eliminated: false,
+        cardReady: false,
+      }
+    }
+  };
+
+  try {
+    await db.ref(`rooms/${code}`).set(roomData);
+    myRoomCode = code;
+    isHost = true;
+    localStorage.setItem('bunker_room', code);
+    localStorage.setItem('bunker_host', 'true');
+    listenToRoom(code);
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = 'СТВОРИТИ КІМНАТУ →';
+    showError('createError', 'Помилка запису в Firebase: ' + e.message);
+  }
+}
+
+async function joinRoom() {
+  const code = document.getElementById('joinCode').value.trim().toUpperCase();
+  const name = document.getElementById('joinName').value.trim();
+  if (!code || code.length !== 4) { showError('joinError', 'Введіть 4-літерний код кімнати'); return; }
+  if (!name) { showError('joinError', 'Введіть ваше ім\'я'); return; }
+  hideError('joinError');
+
+  try {
+    const snap = await db.ref(`rooms/${code}`).once('value');
+    if (!snap.exists()) { showError('joinError', 'Кімнату не знайдено. Перевірте код.'); return; }
+
+    const room = snap.val();
+    if (room.phase !== 'lobby') { showError('joinError', 'Гра вже почалась — не можна приєднатись.'); return; }
+
+    const playerCount = Object.keys(room.players || {}).length;
+    if (playerCount >= room.config.totalPlayers) { showError('joinError', 'Кімната вже заповнена.'); return; }
+
+    await db.ref(`rooms/${code}/players/${myUid}`).set({
+      name,
+      order: playerCount + 1,
+      eliminated: false,
+      cardReady: false,
+    });
+
+    myRoomCode = code;
+    isHost = false;
+    localStorage.setItem('bunker_room', code);
+    localStorage.setItem('bunker_host', 'false');
+    listenToRoom(code);
+  } catch(e) {
+    showError('joinError', 'Помилка: ' + e.message);
+  }
+}
+
+function listenToRoom(code) {
+  if (roomListener) db.ref(`rooms/${myRoomCode}`).off('value', roomListener);
+
+  roomRef = db.ref(`rooms/${code}`);
+  roomListener = roomRef.on('value', snap => {
+    if (!snap.exists()) return;
+    handleRoomUpdate(snap.val());
+  });
+}
+
+function detachListener() {
+  if (roomRef && roomListener) {
+    roomRef.off('value', roomListener);
+    roomListener = null;
+  }
+}
+
+/* ─── ROOM UPDATE HANDLER ─────────────────── */
+function handleRoomUpdate(data) {
+  if (!data) return;
+  const phase   = data.phase;
+  const players = data.players || {};
+  const me      = players[myUid];
+
+  // Store my card if available
+  if (me && me.card && !myCard) {
+    myCard = me.card;
+    fillCardModal(myCard);
+  }
+
+  // Show FAB during active game phases
+  const gamePhases = ['cards','discussion','voting','result'];
+  showFab(gamePhases.includes(phase) && !!myCard);
+
+  if (phase === 'lobby')      renderLobby(data);
+  else if (phase === 'cards') renderCards(data, me);
+  else if (phase === 'discussion') renderDiscussion(data);
+  else if (phase === 'voting')     renderVoting(data, me);
+  else if (phase === 'result')     renderResult(data);
+  else if (phase === 'end')        renderEnd(data);
+
+  // Auto-process votes (host only)
+  if (isHost && phase === 'voting') {
+    const active = getActivePlayers(players);
+    const votes  = (data.votes || {})[data.round] || {};
+    const voteCount = Object.keys(votes).length;
+    if (voteCount >= active.length) {
+      processVotes(data);
+    }
+  }
+}
+
+/* ─── PHASE RENDERERS ─────────────────────── */
+
+function renderLobby(data) {
+  showScreen('screenLobby');
+  const players     = data.players || {};
+  const playerList  = Object.entries(players).sort((a,b) => a[1].order - b[1].order);
+  const count       = playerList.length;
+  const total       = data.config.totalPlayers;
+  const code        = myRoomCode;
+  const sc          = SCENARIOS[data.config.scenarioIdx];
+
+  document.getElementById('lobbyCode').textContent = code;
+  document.getElementById('lobbyPlayerCount').textContent = count;
+  document.getElementById('lobbyPlayerTotal').textContent = total;
+
+  const listEl = document.getElementById('lobbyPlayerList');
+  listEl.innerHTML = playerList.map(([uid, p]) => `
+    <div class="lobby-player-row">
+      <div>
+        <div class="lobby-player-name">${p.name}</div>
+        <div class="lobby-player-sub">Гравець ${p.order}</div>
+      </div>
+      ${uid === data.config.hostId ? '<span class="badge badge-amber">Хост</span>' : '<span class="badge badge-green">✓</span>'}
+    </div>`).join('');
+
+  document.getElementById('lobbyWaitMsg').style.display = count < total ? 'block' : 'none';
+
+  const settingsCard = document.getElementById('lobbySettingsCard');
+  settingsCard.style.display = 'block';
+  document.getElementById('lobbySettings').innerHTML =
+    `🌋 ${sc.emoji} ${sc.name}<br>` +
+    `🚪 Місць у бункері: ${data.config.spots}<br>` +
+    `⏱ Час обговорення: ${fmt(data.config.timerSec)}<br>` +
+    `👥 Гравців: ${total}`;
+
+  if (isHost) {
+    const btn = document.getElementById('btnStartGame');
+    btn.style.display = 'block';
+    btn.disabled = count < 2;
+    btn.textContent = count < total
+      ? `ПОЧАТИ ГРУ (${count}/${total}) →`
+      : 'ПОЧАТИ ГРУ →';
+    document.getElementById('lobbyPlayerMsg').style.display = 'none';
+  } else {
+    document.getElementById('btnStartGame').style.display = 'none';
+    document.getElementById('lobbyPlayerMsg').style.display = 'block';
+  }
+}
+
+function renderCards(data, me) {
+  showScreen('screenMyCard');
+  showFab(false); // Hide FAB on card screen itself
+
+  if (!me || !me.card) return;
+
+  const card = me.card;
+  myCard = card;
+  fillMyCardScreen(card);
+
+  const readyBtn  = document.getElementById('btnCardReady');
+  const hostWrap  = document.getElementById('hostStartDiscussionWrap');
+  const playerMsg = document.getElementById('playerWaitCardMsg');
+
+  if (me.cardReady) {
+    readyBtn.style.display = 'none';
+    if (isHost) {
+      hostWrap.style.display = 'block';
+      playerMsg.style.display = 'none';
+    } else {
+      hostWrap.style.display = 'none';
+      playerMsg.style.display = 'block';
+    }
+  } else {
+    readyBtn.style.display = 'block';
+    hostWrap.style.display = 'none';
+    playerMsg.style.display = 'none';
+  }
+}
+
+function renderDiscussion(data) {
+  showScreen('screenDiscussion');
+  stopTimer();
+
+  const players = data.players || {};
+  const active  = getActivePlayers(players);
+  const toElim  = active.length - data.config.spots;
+  const timerSec = data.config.timerSec;
+  const endAt   = data.timerEndAt || (Date.now() + timerSec * 1000);
+
+  document.getElementById('discRoundNum').textContent   = data.round;
+  document.getElementById('discToElimCount').textContent = toElim;
+
+  const cont = document.getElementById('discActivePlayers');
+  cont.innerHTML = active.map(([, p]) =>
+    `<span class="badge badge-green">${p.name}</span>`).join('');
+
+  // Timer
+  const circumf = 2 * Math.PI * 88;
+  const circle  = document.getElementById('discTimerCircle');
+  circle.style.strokeDasharray = circumf;
+
+  function tick() {
+    const remaining = Math.max(0, Math.round((endAt - Date.now()) / 1000));
+    const prog = remaining / timerSec;
+    circle.style.strokeDashoffset = circumf * (1 - prog);
+    circle.style.stroke = prog < .33 ? 'var(--red)' : prog < .6 ? 'var(--amber)' : 'var(--green)';
+    document.getElementById('discTimerDisplay').textContent = fmt(remaining);
+    if (remaining <= 0) stopTimer();
+  }
+  tick();
+  timerInterval = setInterval(tick, 1000);
+
+  if (isHost) {
+    document.getElementById('btnHostGoVote').style.display = 'block';
+    document.getElementById('discPlayerMsg').style.display = 'none';
+  } else {
+    document.getElementById('btnHostGoVote').style.display = 'none';
+    document.getElementById('discPlayerMsg').style.display = 'block';
+  }
+}
+
+function renderVoting(data, me) {
+  const players = data.players || {};
+  const active  = getActivePlayers(players);
+  const votes   = (data.votes || {})[data.round] || {};
+  const myVote  = votes[myUid];
+  const isEliminated = me && me.eliminated;
+
+  if (isEliminated || myVote) {
+    // Show wait screen
+    showScreen('screenVoteWait');
+    if (isEliminated) {
+      document.getElementById('voteWaitTitle').textContent = 'Ви вибули 💀';
+      document.getElementById('voteWaitMsg').textContent = 'Чекаємо результатів голосування...';
+    } else {
+      document.getElementById('voteWaitTitle').textContent = 'Ваш голос прийнято ✓';
+      document.getElementById('voteWaitMsg').textContent = 'Чекаємо на інших гравців...';
+    }
+    const voted = Object.keys(votes).length;
+    document.getElementById('voteWaitProgress').textContent = `Проголосувало: ${voted} / ${active.length}`;
+    return;
+  }
+
+  showScreen('screenVote');
+  document.getElementById('voteRoundNum').textContent = data.round;
+
+  const list = document.getElementById('voteList');
+  list.innerHTML = '';
+  active.filter(([uid]) => uid !== myUid).forEach(([uid, p]) => {
+    const prof = PROFESSIONS[p.card ? p.card.profIdx : 0];
+    const row  = document.createElement('div');
+    row.className = 'player-row';
+    row.innerHTML = `
+      <div>
+        <div class="player-num">${p.name}</div>
+        <div style="font-size:.8rem;color:var(--muted)">${prof ? prof.icon + ' ' + prof.name : ''}</div>
+      </div>
+      <div style="font-size:1.4rem;color:var(--red)">☠️</div>`;
+    row.onclick = () => castVote(uid, data.round);
+    list.appendChild(row);
+  });
+}
+
+function renderResult(data) {
+  showScreen('screenRoundResult');
+  stopTimer();
+
+  const result  = data.lastResult || {};
+  const players = data.players || {};
+  const eliminated = result.eliminatedUids || [];
+  const tally   = result.tally || {};
+  const isTie   = eliminated.length > 1;
+
+  const elimNames = eliminated.map(uid => (players[uid] || {}).name || uid).join(', ');
+  document.getElementById('resultEmoji').textContent    = isTie ? '⚖️' : '💀';
+  document.getElementById('resultTitle').textContent    = isTie
+    ? `Нічия! Виходять: ${elimNames}`
+    : `${elimNames} залишає бункер`;
+  const maxV = Math.max(...Object.values(tally).map(Number));
+  document.getElementById('resultSubtitle').textContent = isTie
+    ? `По ${maxV} голосів — виключені всі`
+    : `Отримав ${maxV} голос${maxV === 1 ? '' : 'ів'}`;
+
+  // Vote bars
+  const activeBeforeElim = Object.entries(players)
+    .filter(([uid]) => tally[uid] !== undefined)
+    .sort((a,b) => (tally[b[0]]||0)-(tally[a[0]]||0));
+  const total = activeBeforeElim.length;
+
+  const bars = document.getElementById('resultVoteBars');
+  bars.innerHTML = activeBeforeElim.map(([uid, p]) => {
+    const v    = tally[uid] || 0;
+    const pct  = total > 0 ? Math.round(v / total * 100) : 0;
+    const most = eliminated.includes(uid);
+    const prof = p.card ? PROFESSIONS[p.card.profIdx] : null;
+    return `
+      <div class="vote-bar-wrap">
+        <div class="vote-bar-label">
+          <span>${prof ? prof.icon : ''} ${p.name}</span>
+          <span style="color:${most?'var(--red)':'var(--muted)'}">${v} голос${v===1?'':'ів'}</span>
+        </div>
+        <div class="vote-bar-bg">
+          <div class="vote-bar-fill${most?' most':''}" style="width:${pct}%"></div>
+        </div>
+      </div>`;
+  }).join('');
+
+  // Bunker status
+  const survivors = Object.entries(players).filter(([,p]) => !p.eliminated);
+  const losers    = Object.entries(players).filter(([,p]) => p.eliminated);
+  document.getElementById('resultBunkerStatus').innerHTML =
+    survivors.map(([,p]) => `<span class="badge badge-green">✅ ${p.name}</span>`).join('') +
+    losers.map(([,p]) => `<span class="badge badge-red">❌ ${p.name}</span>`).join('');
+
+  const gameOver = survivors.length <= data.config.spots;
+  if (isHost) {
+    const btn = document.getElementById('btnHostAfterResult');
+    btn.style.display = 'block';
+    btn.textContent   = gameOver ? 'ЗАВЕРШИТИ ГРУ →' : `РАУНД ${data.round + 1} →`;
+    btn.onclick = () => {
+      if (gameOver) db.ref(`rooms/${myRoomCode}/phase`).set('end');
+      else {
+        const nextRound = data.round + 1;
+        const endAt = Date.now() + data.config.timerSec * 1000;
+        db.ref(`rooms/${myRoomCode}`).update({ phase:'discussion', round: nextRound, timerEndAt: endAt });
+      }
+    };
+    document.getElementById('resultPlayerMsg').style.display = 'none';
+  } else {
+    document.getElementById('btnHostAfterResult').style.display = 'none';
+    document.getElementById('resultPlayerMsg').style.display = 'block';
+  }
+}
+
+function renderEnd(data) {
+  showScreen('screenEnd');
+  showFab(false);
+  stopTimer();
+
+  const players  = data.players || {};
+  const survivors = Object.entries(players).filter(([,p]) => !p.eliminated);
+  const losers    = Object.entries(players).filter(([,p]) => p.eliminated);
+
+  document.getElementById('endTitle').textContent = `${survivors.length} з ${Object.keys(players).length} вижили`;
+
+  document.getElementById('survivorCards').innerHTML = survivors.map(([,p]) => {
+    const prof = p.card ? PROFESSIONS[p.card.profIdx] : null;
+    return `
+      <div class="card animate-in" style="display:flex;align-items:center;gap:14px;padding:14px">
+        <div style="font-size:2rem">${prof ? prof.icon : '🎭'}</div>
+        <div>
+          <div class="badge badge-green" style="margin-bottom:4px">${p.name} — ВИЖИВШИЙ</div>
+          <div style="font-weight:700">${prof ? prof.name : ''}</div>
+          <div style="font-size:.8rem;color:var(--muted)">${p.card ? SKILLS[p.card.skillIdx] : ''}</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('loserBadges').innerHTML = losers.map(([,p]) =>
+    `<span class="badge badge-red">💀 ${p.name}</span>`).join('');
+
+  document.getElementById('btnRestart').style.display = isHost ? 'block' : 'none';
+}
+
+/* ─── FILL CARD SCREENS ─────────────────────── */
+function fillMyCardScreen(card) {
+  const prof   = PROFESSIONS[card.profIdx];
+  const health = HEALTH[card.healthIdx];
+  document.getElementById('myCardProfIcon').textContent  = prof.icon;
+  document.getElementById('myCardProfName').textContent  = prof.name;
+  document.getElementById('myCardProfDesc').textContent  = prof.desc;
+  document.getElementById('myCardHealth').textContent    = health.name;
+  document.getElementById('myCardHealthBadge').innerHTML = healthBadge(health.sev);
+  document.getElementById('myCardHobby').textContent     = HOBBIES[card.hobbyIdx];
+  document.getElementById('myCardBaggage').textContent   = BAGGAGE[card.baggageIdx];
+  document.getElementById('myCardSkill').textContent     = SKILLS[card.skillIdx];
+  document.getElementById('myCardFact').textContent      = FACTS[card.factIdx];
+}
+
+function fillCardModal(card) {
+  const prof   = PROFESSIONS[card.profIdx];
+  const health = HEALTH[card.healthIdx];
+  document.getElementById('modalProfIcon').textContent  = prof.icon;
+  document.getElementById('modalProfName').textContent  = prof.name;
+  document.getElementById('modalProfDesc').textContent  = prof.desc;
+  document.getElementById('modalHealth').textContent    = health.name;
+  document.getElementById('modalHealthBadge').innerHTML = healthBadge(health.sev);
+  document.getElementById('modalHobby').textContent     = HOBBIES[card.hobbyIdx];
+  document.getElementById('modalBaggage').textContent   = BAGGAGE[card.baggageIdx];
+  document.getElementById('modalSkill').textContent     = SKILLS[card.skillIdx];
+  document.getElementById('modalFact').textContent      = FACTS[card.factIdx];
+}
+
+/* ─── VOTE LOGIC ─────────────────────────────── */
+async function castVote(targetUid, round) {
+  await db.ref(`rooms/${myRoomCode}/votes/${round}/${myUid}`).set(targetUid);
+}
+
+async function processVotes(data) {
+  const players = data.players || {};
+  const round   = data.round;
+  const votes   = (data.votes || {})[round] || {};
+
+  // Tally
+  const active = getActivePlayers(players);
+  const tally  = {};
+  active.forEach(([uid]) => { tally[uid] = 0; });
+  Object.values(votes).forEach(tid => { if (tally[tid] !== undefined) tally[tid]++; });
+
+  const maxVotes = Math.max(...Object.values(tally));
+  const topUids  = Object.keys(tally).filter(uid => tally[uid] === maxVotes);
+
+  // Mark eliminated
+  const updates = {};
+  topUids.forEach(uid => { updates[`players/${uid}/eliminated`] = true; });
+  updates['lastResult'] = { round, eliminatedUids: topUids, tally };
+  updates['phase'] = 'result';
+
+  await db.ref(`rooms/${myRoomCode}`).update(updates);
+}
+
+/* ─── HOST: START GAME ─────────────────────── */
+async function startGame() {
+  const snap = await db.ref(`rooms/${myRoomCode}`).once('value');
+  const data = snap.val();
+  if (!data) return;
+
+  const players = data.players || {};
+  const uids    = Object.keys(players);
+  const n       = uids.length;
+
+  const profs    = shuffled([...Array(PROFESSIONS.length).keys()]).slice(0, n);
+  const healths  = shuffled([...Array(HEALTH.length).keys()]).slice(0, n);
+  const hobbies  = shuffled([...Array(HOBBIES.length).keys()]).slice(0, n);
+  const baggages = shuffled([...Array(BAGGAGE.length).keys()]).slice(0, n);
+  const skills   = shuffled([...Array(SKILLS.length).keys()]).slice(0, n);
+  const facts    = shuffled([...Array(FACTS.length).keys()]).slice(0, n);
+
+  const updates = { phase: 'cards' };
+  uids.forEach((uid, i) => {
+    updates[`players/${uid}/card`] = {
+      profIdx:    profs[i],
+      healthIdx:  healths[i],
+      hobbyIdx:   hobbies[i],
+      baggageIdx: baggages[i],
+      skillIdx:   skills[i],
+      factIdx:    facts[i],
+    };
+  });
+
+  await db.ref(`rooms/${myRoomCode}`).update(updates);
+}
+
+/* ─── EVENT LISTENERS ─────────────────────── */
+
+// Landing
+document.getElementById('btnGoCreate').onclick = () => showScreen('screenCreate');
+document.getElementById('btnGoJoin').onclick   = () => showScreen('screenJoin');
+
+// Back buttons
+document.getElementById('btnBackToLanding').onclick  = () => showScreen('screenLanding');
+document.getElementById('btnBackToLanding2').onclick = () => showScreen('screenLanding');
+
+// Create
+document.getElementById('btnCreateRoom').onclick = createRoom;
+
+// Join
+document.getElementById('btnJoinRoom').onclick = joinRoom;
+document.getElementById('joinCode').addEventListener('input', e => {
+  e.target.value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
+});
+
+// Setup steppers
+document.getElementById('btnDecPlayers').onclick = () => { if(setupPlayers>2){setupPlayers--;updateSetupUI();} };
+document.getElementById('btnIncPlayers').onclick = () => { if(setupPlayers<14){setupPlayers++;updateSetupUI();} };
+document.getElementById('btnDecSpots').onclick   = () => { if(setupSpots>1){setupSpots--;updateSetupUI();} };
+document.getElementById('btnIncSpots').onclick   = () => { if(setupSpots<setupPlayers-1){setupSpots++;updateSetupUI();} };
+
+document.getElementById('timerOptions').addEventListener('click', e => {
+  const btn = e.target.closest('.timer-opt');
+  if (!btn) return;
+  document.querySelectorAll('.timer-opt').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  setupTimer = +btn.dataset.val;
+});
+
+document.getElementById('scenarioOptions').addEventListener('click', e => {
+  const btn = e.target.closest('.scen-opt');
+  if (!btn) return;
+  document.querySelectorAll('.scen-opt').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  setupScenario = btn.dataset.val === 'random' ? 'random' : +btn.dataset.val;
+});
+
+// Lobby
+document.getElementById('btnStartGame').onclick = startGame;
+document.getElementById('lobbyCode').onclick = () => {
+  navigator.clipboard.writeText(myRoomCode).then(() => {
+    document.getElementById('lobbyCode').textContent = '✓ СКОПІЙОВАНО';
+    setTimeout(() => { document.getElementById('lobbyCode').textContent = myRoomCode; }, 1500);
+  });
+};
+
+// My card
+document.getElementById('btnCardReady').onclick = async () => {
+  await db.ref(`rooms/${myRoomCode}/players/${myUid}/cardReady`).set(true);
+};
+
+document.getElementById('btnHostStartDiscussion').onclick = async () => {
+  const endAt = Date.now() + setupTimer * 1000;
+  // Use current config from Firebase
+  const snap = await db.ref(`rooms/${myRoomCode}/config/timerSec`).once('value');
+  const timerSec = snap.val() || setupTimer;
+  await db.ref(`rooms/${myRoomCode}`).update({
+    phase: 'discussion',
+    timerEndAt: Date.now() + timerSec * 1000,
+  });
+};
+
+// Discussion
+document.getElementById('btnHostGoVote').onclick = async () => {
+  await db.ref(`rooms/${myRoomCode}/phase`).set('voting');
+};
+
+// FAB card modal
+document.getElementById('fabCard').onclick = () => {
+  document.getElementById('cardModal').classList.remove('hidden');
+};
+document.getElementById('btnCloseModal').onclick = () => {
+  document.getElementById('cardModal').classList.add('hidden');
+};
+
+// Restart
+document.getElementById('btnRestart').onclick = async () => {
+  detachListener();
+  myRoomCode = null;
+  isHost = false;
+  myCard = null;
+  cardSeen = false;
+  localStorage.removeItem('bunker_room');
+  localStorage.removeItem('bunker_host');
+  showScreen('screenLanding');
+};
+
+/* ─── SETUP UI ─────────────────────────────── */
+function updateSetupUI() {
+  document.getElementById('valPlayers').textContent = setupPlayers;
+  setupSpots = Math.min(setupSpots, setupPlayers - 1);
+  document.getElementById('valSpots').textContent   = setupSpots;
+  const half = Math.ceil(setupPlayers / 2);
+  document.getElementById('spotsHint').textContent  = `рекомендовано: ${half}`;
+}
+updateSetupUI();
+
+/* ─── RECONNECT ─────────────────────────────── */
+function tryReconnect() {
+  const savedRoom = localStorage.getItem('bunker_room');
+  const savedHost = localStorage.getItem('bunker_host');
+  if (savedRoom) {
+    myRoomCode = savedRoom;
+    isHost     = savedHost === 'true';
+    listenToRoom(savedRoom);
+  }
+}
+
+/* ─── BOOT ──────────────────────────────────── */
+if (initFirebase()) {
+  tryReconnect();
+}
+</script>
+</body>
+</html>
