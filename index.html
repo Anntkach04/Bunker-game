@@ -725,7 +725,7 @@ const SCENARIOS = [
 
 /* ─── APP STATE ─────────────────────────────── */
 let db;
-let myUid       = localStorage.getItem('bunker_uid') || generateUid();
+let myUid       = sessionStorage.getItem('bunker_uid') || generateUid();
 let myRoomCode  = null;
 let isHost      = false;
 let roomRef     = null;
@@ -734,7 +734,7 @@ let myCard      = null;   // { profIdx, healthIdx, hobbyIdx, baggageIdx, skillId
 let timerInterval = null;
 let cardSeen    = false;
 
-localStorage.setItem('bunker_uid', myUid);
+sessionStorage.setItem('bunker_uid', myUid);
 
 /* ─── SETUP STATE (create screen) ─────────── */
 let setupPlayers = 6, setupSpots = 3, setupTimer = 180, setupScenario = 0;
@@ -867,8 +867,8 @@ async function createRoom() {
     await db.ref(`rooms/${code}`).set(roomData);
     myRoomCode = code;
     isHost = true;
-    localStorage.setItem('bunker_room', code);
-    localStorage.setItem('bunker_host', 'true');
+    sessionStorage.setItem('bunker_room', code);
+    sessionStorage.setItem('bunker_host', 'true');
     listenToRoom(code);
   } catch(e) {
     btn.disabled = false;
@@ -903,8 +903,8 @@ async function joinRoom() {
 
     myRoomCode = code;
     isHost = false;
-    localStorage.setItem('bunker_room', code);
-    localStorage.setItem('bunker_host', 'false');
+    sessionStorage.setItem('bunker_room', code);
+    sessionStorage.setItem('bunker_host', 'false');
     listenToRoom(code);
   } catch(e) {
     showError('joinError', 'Помилка: ' + e.message);
@@ -1405,8 +1405,8 @@ document.getElementById('btnRestart').onclick = async () => {
   isHost = false;
   myCard = null;
   cardSeen = false;
-  localStorage.removeItem('bunker_room');
-  localStorage.removeItem('bunker_host');
+  sessionStorage.removeItem('bunker_room');
+  sessionStorage.removeItem('bunker_host');
   showScreen('screenLanding');
 };
 
@@ -1422,8 +1422,8 @@ updateSetupUI();
 
 /* ─── RECONNECT ─────────────────────────────── */
 function tryReconnect() {
-  const savedRoom = localStorage.getItem('bunker_room');
-  const savedHost = localStorage.getItem('bunker_host');
+  const savedRoom = sessionStorage.getItem('bunker_room');
+  const savedHost = sessionStorage.getItem('bunker_host');
   if (savedRoom) {
     myRoomCode = savedRoom;
     isHost     = savedHost === 'true';
