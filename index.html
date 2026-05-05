@@ -17,13 +17,11 @@
     .screen { display:none; min-height:100dvh; flex-direction:column; align-items:center; padding:20px 16px 32px; }
     .screen.active { display:flex; }
 
-    /* ── TYPOGRAPHY ── */
     h1 { font-size:2.4rem; font-weight:900; letter-spacing:.05em; }
     h2 { font-size:1.4rem; font-weight:700; }
     h3 { font-size:1.1rem; font-weight:600; }
     p  { line-height:1.6; color:var(--muted); }
 
-    /* ── BUTTONS ── */
     .btn {
       width:100%; padding:16px; border:none; border-radius:12px; font-size:1rem;
       font-weight:700; cursor:pointer; transition:all .15s; letter-spacing:.03em;
@@ -37,7 +35,6 @@
     .btn + .btn  { margin-top:10px; }
     .btn:disabled { opacity:.4; pointer-events:none; }
 
-    /* ── CARD ── */
     .card {
       background:var(--s1); border:1px solid var(--border2); border-radius:16px;
       padding:16px; width:100%; margin-bottom:12px;
@@ -48,26 +45,23 @@
     .card-value { font-size:1.05rem; font-weight:600; }
     .card-sub   { font-size:.85rem; color:var(--muted); margin-top:2px; }
 
-    /* ── BADGE ── */
     .badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:.75rem; font-weight:700; }
     .badge-green { background:var(--green3); color:var(--green); border:1px solid var(--green2); }
     .badge-red   { background:#450a0a; color:var(--red); border:1px solid #7f1d1d; }
     .badge-amber { background:#451a03; color:var(--amber); border:1px solid #92400e; }
+    .badge-blue  { background:#1e3a5f; color:var(--blue); border:1px solid #1d4ed8; }
 
-    /* ── STEPPER ── */
     .stepper { display:flex; align-items:center; gap:12px; }
     .stepper button { width:44px; height:44px; border-radius:50%; border:1px solid var(--border2); background:var(--s2); color:var(--text); font-size:1.3rem; cursor:pointer; flex-shrink:0; }
     .stepper button:active { background:var(--s3); }
     .stepper-val { font-size:2rem; font-weight:900; color:var(--green); min-width:48px; text-align:center; }
 
-    /* ── TIMER ── */
     .timer-ring { position:relative; display:flex; align-items:center; justify-content:center; }
     .timer-svg  { transform:rotate(-90deg); }
     .timer-track { fill:none; stroke:var(--s3); stroke-width:8; }
     .timer-prog  { fill:none; stroke:var(--green); stroke-width:8; stroke-linecap:round; transition:stroke-dashoffset .9s linear, stroke .5s; }
     .timer-num  { position:absolute; font-size:2.6rem; font-weight:900; letter-spacing:.02em; }
 
-    /* ── PLAYER LIST ── */
     .player-row {
       display:flex; align-items:center; justify-content:space-between;
       padding:12px 14px; background:var(--s1); border:1px solid var(--border);
@@ -78,16 +72,13 @@
     .player-row.voted    { border-color:var(--green2); opacity:.5; pointer-events:none; }
     .player-row.eliminated { opacity:.35; pointer-events:none; text-decoration:line-through; }
     .player-num { font-size:1rem; font-weight:700; color:var(--green); }
-    .player-elim-badge { font-size:.7rem; color:var(--red); font-weight:700; }
 
-    /* ── VOTE BAR ── */
     .vote-bar-wrap { margin-bottom:10px; }
     .vote-bar-label { display:flex; justify-content:space-between; font-size:.85rem; margin-bottom:4px; }
     .vote-bar-bg { background:var(--s2); border-radius:4px; height:8px; overflow:hidden; }
     .vote-bar-fill { height:100%; border-radius:4px; background:var(--green2); transition:width .4s ease; }
     .vote-bar-fill.most { background:var(--red); }
 
-    /* ── MISC ── */
     .sep { width:100%; height:1px; background:var(--border); margin:16px 0; }
     .top-row { display:flex; align-items:center; justify-content:space-between; width:100%; margin-bottom:4px; }
     .glow { text-shadow:0 0 20px var(--green), 0 0 40px var(--green2); }
@@ -99,7 +90,6 @@
     .small-note { font-size:.8rem; color:var(--dim); text-align:center; }
     .phase-tag { font-size:.7rem; font-weight:700; letter-spacing:.12em; color:var(--dim); text-transform:uppercase; }
 
-    /* ── SCENARIO BLOCK ── */
     .scenario-box {
       background:var(--s2); border:1px solid #7f1d1d; border-radius:14px;
       padding:18px; width:100%; margin:12px 0;
@@ -107,7 +97,6 @@
     .scenario-title { font-size:1.2rem; font-weight:800; color:var(--red); margin-bottom:8px; }
     .scenario-text  { font-size:.9rem; color:var(--muted); line-height:1.7; }
 
-    /* ── PLAYER CARD (secret) ── */
     .player-card-header {
       background:linear-gradient(135deg,var(--s2),var(--green3));
       border:1px solid var(--border2); border-radius:16px 16px 0 0;
@@ -121,52 +110,108 @@
     .card-row-info .val   { font-size:.95rem; font-weight:600; margin-top:1px; }
     .fact-box {
       background:linear-gradient(135deg,#1a1000,#0f1700);
-      border:1px dashed var(--amber); border-radius:12px; padding:14px 16px; margin:12px;
+      border:1px dashed var(--amber); border-radius:12px; padding:14px 16px; margin:12px 0;
     }
     .fact-box .fact-label { font-size:.65rem; font-weight:700; letter-spacing:.1em; color:var(--amber); text-transform:uppercase; margin-bottom:6px; }
     .fact-box .fact-text  { font-size:.9rem; color:#fef3c7; line-height:1.5; }
 
-    /* ── COVER SCREEN ── */
-    .cover-screen {
-      position:fixed; inset:0; background:var(--bg); z-index:100;
-      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;
-    }
-    .cover-screen.hidden { display:none; }
-    .cover-lock { font-size:4rem; }
-    .cover-text { font-size:1.1rem; color:var(--muted); text-align:center; }
-    .cover-name { font-size:1.8rem; font-weight:900; color:var(--green); }
-
-    /* ── ANIMATIONS ── */
     @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
     .animate-in { animation:fadeIn .3s ease forwards; }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
     .pulse { animation:pulse 1.5s infinite; }
 
-    /* ── SCROLL FIX ── */
     .scroll-area { width:100%; overflow-y:auto; flex:1; }
+
+    /* ── NEW STYLES ── */
+    .input-field {
+      width:100%; padding:14px 16px;
+      background:var(--s2); border:1px solid var(--border2);
+      border-radius:12px; color:var(--text); font-size:1rem;
+      outline:none; margin-bottom:12px; letter-spacing:.03em;
+    }
+    .input-field:focus { border-color:var(--green); }
+    .input-field.code-input { font-size:1.8rem; font-weight:900; letter-spacing:.3em; text-align:center; text-transform:uppercase; }
+
+    .room-code-display {
+      font-size:3rem; font-weight:900; letter-spacing:.25em;
+      color:var(--green); text-align:center; padding:20px 16px;
+      background:var(--s2); border-radius:16px; border:2px dashed var(--green2);
+      margin:12px 0; cursor:pointer; user-select:all;
+    }
+    .room-code-hint { font-size:.75rem; color:var(--dim); text-align:center; margin-top:-8px; margin-bottom:8px; }
+
+    .lobby-player-row {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:12px 14px; background:var(--s1); border:1px solid var(--border);
+      border-radius:12px; margin-bottom:8px;
+    }
+    .lobby-player-name { font-size:1rem; font-weight:600; }
+    .lobby-player-sub  { font-size:.8rem; color:var(--muted); }
+
+    .fab {
+      position:fixed; bottom:24px; right:20px;
+      width:52px; height:52px; border-radius:50%;
+      background:var(--green2); border:2px solid var(--green);
+      color:#fff; font-size:1.3rem; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      z-index:50; box-shadow:0 4px 16px rgba(0,0,0,.5);
+    }
+    .fab.hidden { display:none; }
+
+    .card-modal {
+      position:fixed; inset:0; background:var(--bg); z-index:80;
+      display:flex; flex-direction:column; align-items:center;
+      padding:20px 16px 32px; overflow-y:auto;
+    }
+    .card-modal.hidden { display:none; }
+
+    .timer-opt.selected, .scen-opt.selected {
+      background:var(--green3) !important;
+      border-color:var(--green) !important;
+      color:var(--green) !important;
+    }
+
+    .error-box {
+      background:#450a0a; border:1px solid #7f1d1d; border-radius:12px;
+      padding:12px 16px; color:var(--red); font-size:.9rem; margin-bottom:12px;
+      display:none;
+    }
+    .error-box.visible { display:block; }
+
+    .waiting-anim { font-size:2rem; text-align:center; }
   </style>
 </head>
 <body>
 
 <!-- ══════════════════════════════════════════════
-     COVER / LOCK SCREEN
+     SCREEN: LANDING
 ══════════════════════════════════════════════ -->
-<div class="cover-screen hidden" id="coverScreen">
-  <div class="cover-lock">🔒</div>
-  <div class="cover-name" id="coverPlayerName"></div>
-  <div class="cover-text" id="coverText"></div>
-  <button class="btn btn-primary" style="max-width:280px;margin-top:8px" id="coverBtn"></button>
+<div class="screen active" id="screenLanding">
+  <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1">
+    <div class="full-center">
+      <div style="font-size:4rem">☢️</div>
+      <h1 class="glow">БУНКЕР</h1>
+      <p class="sub-title">гра на виживання</p>
+    </div>
+    <button class="btn btn-primary" id="btnGoCreate" style="font-size:1.1rem;padding:18px">🏠 Створити кімнату</button>
+    <button class="btn btn-ghost" id="btnGoJoin" style="margin-top:10px;font-size:1.1rem;padding:18px">🔗 Приєднатись до гри</button>
+    <div style="height:16px"></div>
+  </div>
 </div>
 
 <!-- ══════════════════════════════════════════════
-     SCREEN 1 – SETUP
+     SCREEN: CREATE (host setup)
 ══════════════════════════════════════════════ -->
-<div class="screen active" id="screenSetup">
+<div class="screen" id="screenCreate">
   <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:0;flex:1">
-    <div style="text-align:center;padding:32px 0 24px">
-      <div style="font-size:3.5rem;margin-bottom:8px">☢️</div>
-      <h1 class="glow">БУНКЕР</h1>
-      <p class="sub-title" style="margin-top:6px">гра на виживання</p>
+    <div style="text-align:center;padding:24px 0 16px">
+      <div class="phase-tag">НАЛАШТУВАННЯ ГРИ</div>
+      <h2 style="margin-top:8px">Нова кімната</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="margin-bottom:8px">👤 Ваше ім'я</div>
+      <input class="input-field" id="hostName" placeholder="Як вас звати?" maxlength="20" style="margin-bottom:0">
     </div>
 
     <div class="card">
@@ -210,65 +255,94 @@
       </div>
     </div>
 
+    <div class="error-box" id="createError"></div>
     <div class="spacer"></div>
-    <button class="btn btn-primary" id="btnStartGame" style="font-size:1.1rem;padding:18px">ПОЧАТИ ГРУ →</button>
+    <button class="btn btn-primary" id="btnCreateRoom" style="font-size:1.1rem;padding:18px">СТВОРИТИ КІМНАТУ →</button>
+    <button class="btn btn-ghost" id="btnBackToLanding" style="margin-top:10px">← Назад</button>
     <div style="height:16px"></div>
   </div>
 </div>
 
 <!-- ══════════════════════════════════════════════
-     SCREEN 2 – SCENARIO
+     SCREEN: JOIN
 ══════════════════════════════════════════════ -->
-<div class="screen" id="screenScenario">
-  <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1;gap:0">
-    <div style="text-align:center;padding:28px 0 16px">
-      <div id="scenarioEmoji" style="font-size:3.5rem;margin-bottom:8px">☢️</div>
-      <div class="phase-tag">УВАГА! КАТАСТРОФА</div>
-      <h2 id="scenarioName" style="margin-top:8px;color:var(--red)" class="glow-red">Ядерна катастрофа</h2>
-    </div>
-
-    <div class="scenario-box">
-      <div class="scenario-title" id="scenarioAlert">🔴 Надзвичайна ситуація</div>
-      <p class="scenario-text" id="scenarioDesc"></p>
+<div class="screen" id="screenJoin">
+  <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1">
+    <div style="text-align:center;padding:32px 0 24px">
+      <div style="font-size:3rem;margin-bottom:8px">🔗</div>
+      <div class="phase-tag">ПРИЄДНАТИСЬ</div>
+      <h2 style="margin-top:8px">Вхід до кімнати</h2>
     </div>
 
     <div class="card">
-      <div class="card-label" style="margin-bottom:8px">📊 Умови виживання</div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <div class="badge badge-red">👥 Гравців: <span id="sInfoPlayers"></span></div>
-        <div class="badge badge-green">🚪 Місць: <span id="sInfoSpots"></span></div>
-        <div class="badge badge-amber">⏱ Раундів: <span id="sInfoRounds"></span></div>
-      </div>
-      <div class="sep"></div>
-      <p style="font-size:.85rem;color:var(--muted);line-height:1.6">
-        Бункер може прийняти лише <strong style="color:var(--green)" id="sInfoSpots2"></strong> осіб.
-        Голосуванням вирішіть, хто лишиться за дверима.
-      </p>
+      <div class="card-label" style="margin-bottom:8px">🔑 Код кімнати</div>
+      <input class="input-field code-input" id="joinCode" placeholder="XXXX" maxlength="4" style="margin-bottom:0">
     </div>
 
+    <div class="card">
+      <div class="card-label" style="margin-bottom:8px">👤 Ваше ім'я</div>
+      <input class="input-field" id="joinName" placeholder="Як вас звати?" maxlength="20" style="margin-bottom:0">
+    </div>
+
+    <div class="error-box" id="joinError"></div>
     <div class="spacer"></div>
-    <button class="btn btn-primary" id="btnToCardDeal" style="font-size:1.1rem;padding:18px">РОЗДАТИ КАРТИ →</button>
+    <button class="btn btn-primary" id="btnJoinRoom" style="font-size:1.1rem;padding:18px">ПРИЄДНАТИСЬ →</button>
+    <button class="btn btn-ghost" id="btnBackToLanding2" style="margin-top:10px">← Назад</button>
     <div style="height:16px"></div>
   </div>
 </div>
 
 <!-- ══════════════════════════════════════════════
-     SCREEN 3 – CARD DEAL (secret)
+     SCREEN: LOBBY (host + players)
 ══════════════════════════════════════════════ -->
-<div class="screen" id="screenCard">
+<div class="screen" id="screenLobby">
+  <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1">
+    <div style="text-align:center;padding:24px 0 16px">
+      <div class="phase-tag">КІМ­НА­ТА</div>
+      <h2 style="margin-top:6px">Чекаємо гравців</h2>
+    </div>
+
+    <div class="card" style="text-align:center">
+      <div class="card-label" style="margin-bottom:4px">Код кімнати — покажіть іншим</div>
+      <div class="room-code-display" id="lobbyCode" title="Натисніть щоб скопіювати"></div>
+      <div class="room-code-hint">Натисніть на код щоб скопіювати</div>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="margin-bottom:12px">👥 Гравці (<span id="lobbyPlayerCount">0</span>/<span id="lobbyPlayerTotal">?</span>)</div>
+      <div id="lobbyPlayerList"></div>
+      <div id="lobbyWaitMsg" style="font-size:.85rem;color:var(--muted);text-align:center;padding:8px 0" class="pulse">Чекаємо на гравців...</div>
+    </div>
+
+    <div class="card" id="lobbySettingsCard" style="display:none">
+      <div class="card-label" style="margin-bottom:8px">⚙️ Налаштування</div>
+      <div style="font-size:.85rem;color:var(--muted);line-height:2" id="lobbySettings"></div>
+    </div>
+
+    <div class="spacer"></div>
+    <button class="btn btn-primary" id="btnStartGame" style="font-size:1.1rem;padding:18px;display:none">ПОЧАТИ ГРУ →</button>
+    <div id="lobbyPlayerMsg" style="text-align:center;font-size:.9rem;color:var(--muted);padding:8px;display:none">
+      Чекаємо поки хост почне гру...
+    </div>
+    <div style="height:16px"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN: MY CARD
+══════════════════════════════════════════════ -->
+<div class="screen" id="screenMyCard">
   <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1">
     <div style="text-align:center;padding:20px 0 12px">
-      <div class="phase-tag">КАРТКИ ГРАВЦІВ</div>
-      <div style="margin-top:6px;font-size:.9rem;color:var(--muted)">
-        Гравець <span id="cardPlayerNum" style="color:var(--green);font-weight:800"></span> з <span id="cardPlayerTotal"></span>
-      </div>
+      <div class="phase-tag">ВАША КАРТКА</div>
+      <div style="margin-top:6px;font-size:.9rem;color:var(--muted)">Запам'ятайте — більше не з'явиться</div>
     </div>
 
     <div class="player-card-header">
-      <div style="font-size:2.5rem" id="cardProfIcon"></div>
+      <div style="font-size:2.5rem" id="myCardProfIcon"></div>
       <div style="font-size:.7rem;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:4px">Ваша роль</div>
-      <div style="font-size:1.3rem;font-weight:800;margin-top:2px" id="cardProfName"></div>
-      <div style="font-size:.85rem;color:var(--muted);margin-top:4px" id="cardProfDesc"></div>
+      <div style="font-size:1.3rem;font-weight:800;margin-top:2px" id="myCardProfName"></div>
+      <div style="font-size:.85rem;color:var(--muted);margin-top:4px" id="myCardProfDesc"></div>
     </div>
 
     <div class="player-card-body">
@@ -276,67 +350,73 @@
         <div class="card-row-icon">❤️</div>
         <div class="card-row-info">
           <div class="label">Стан здоров'я</div>
-          <div class="val" id="cardHealth"></div>
+          <div class="val" id="myCardHealth"></div>
         </div>
-        <div id="cardHealthBadge"></div>
+        <div id="myCardHealthBadge"></div>
       </div>
       <div class="card-row">
         <div class="card-row-icon">🎯</div>
         <div class="card-row-info">
           <div class="label">Хобі</div>
-          <div class="val" id="cardHobby"></div>
+          <div class="val" id="myCardHobby"></div>
         </div>
       </div>
       <div class="card-row">
         <div class="card-row-icon">🎒</div>
         <div class="card-row-info">
           <div class="label">Багаж</div>
-          <div class="val" id="cardBaggage"></div>
+          <div class="val" id="myCardBaggage"></div>
         </div>
       </div>
       <div class="card-row" style="border-bottom:none">
         <div class="card-row-icon">⚡</div>
         <div class="card-row-info">
           <div class="label">Унікальна навичка</div>
-          <div class="val" id="cardSkill"></div>
+          <div class="val" id="myCardSkill"></div>
         </div>
       </div>
     </div>
 
     <div class="fact-box">
       <div class="fact-label">🔐 Таємний факт (тільки для вас)</div>
-      <div class="fact-text" id="cardFact"></div>
+      <div class="fact-text" id="myCardFact"></div>
     </div>
 
-    <div class="small-note" style="margin-top:4px">Запам'ятайте картку — вона більше не з'явиться</div>
     <div class="spacer"></div>
-    <button class="btn btn-primary" id="btnCardReady" style="margin-top:16px;font-size:1.05rem;padding:18px">Я ЗАПАМ'ЯТАВ ✓</button>
+    <button class="btn btn-primary" id="btnCardReady" style="font-size:1.05rem;padding:18px">Я ЗАПАМ'ЯТАВ ✓</button>
+    <div id="hostStartDiscussionWrap" style="display:none;margin-top:10px">
+      <p class="small-note" style="margin-bottom:10px">Зачекайте поки всі переглянуть свої картки</p>
+      <button class="btn btn-ghost" id="btnHostStartDiscussion">ПОЧАТИ ОБГОВОРЕННЯ →</button>
+    </div>
+    <div id="playerWaitCardMsg" style="display:none;text-align:center;font-size:.9rem;color:var(--muted);padding:12px" class="pulse">
+      Чекаємо поки хост почне обговорення...
+    </div>
     <div style="height:16px"></div>
   </div>
 </div>
 
 <!-- ══════════════════════════════════════════════
-     SCREEN 4 – DISCUSSION
+     SCREEN: DISCUSSION
 ══════════════════════════════════════════════ -->
 <div class="screen" id="screenDiscussion">
   <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1;align-items:center">
     <div style="text-align:center;padding:20px 0 8px;width:100%">
-      <div class="phase-tag">РАУНД <span id="roundNum"></span></div>
+      <div class="phase-tag">РАУНД <span id="discRoundNum"></span></div>
       <h2 style="margin-top:6px">Час обговорення</h2>
     </div>
 
-    <div class="card" style="text-align:center;padding:12px">
-      <div style="font-size:.85rem;color:var(--muted);margin-bottom:8px">⚠️ Ще потрібно прибрати <strong style="color:var(--red)" id="toElimCount"></strong> гравців</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center" id="activePlayers"></div>
+    <div class="card" style="text-align:center;padding:12px;width:100%">
+      <div style="font-size:.85rem;color:var(--muted);margin-bottom:8px">⚠️ Ще потрібно прибрати <strong style="color:var(--red)" id="discToElimCount"></strong> гравців</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center" id="discActivePlayers"></div>
     </div>
 
-    <div style="margin:20px 0">
+    <div style="margin:16px 0">
       <div class="timer-ring">
         <svg class="timer-svg" width="200" height="200" viewBox="0 0 200 200">
           <circle class="timer-track" cx="100" cy="100" r="88"/>
-          <circle class="timer-prog" id="timerCircle" cx="100" cy="100" r="88"/>
+          <circle class="timer-prog" id="discTimerCircle" cx="100" cy="100" r="88"/>
         </svg>
-        <div class="timer-num" id="timerDisplay">3:00</div>
+        <div class="timer-num" id="discTimerDisplay">3:00</div>
       </div>
     </div>
 
@@ -351,37 +431,46 @@
     </div>
 
     <div class="spacer"></div>
-    <button class="btn btn-primary" id="btnStartVoting" style="font-size:1.05rem;padding:18px;width:100%">ПЕРЕЙТИ ДО ГОЛОСУВАННЯ</button>
+    <button class="btn btn-primary" id="btnHostGoVote" style="font-size:1.05rem;padding:18px;width:100%;display:none">ПЕРЕЙТИ ДО ГОЛОСУВАННЯ</button>
+    <div id="discPlayerMsg" style="text-align:center;font-size:.9rem;color:var(--muted);padding:8px;display:none">
+      Чекайте команди від хоста
+    </div>
     <div style="height:16px"></div>
   </div>
 </div>
 
 <!-- ══════════════════════════════════════════════
-     SCREEN 5 – VOTE
+     SCREEN: VOTE
 ══════════════════════════════════════════════ -->
 <div class="screen" id="screenVote">
   <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1">
     <div style="text-align:center;padding:20px 0 12px">
       <div class="phase-tag">ГОЛОСУВАННЯ • РАУНД <span id="voteRoundNum"></span></div>
-      <h2 style="margin-top:6px">Гравець <span id="votePlayerNum" style="color:var(--green)"></span></h2>
-      <p style="margin-top:4px;font-size:.9rem">Хто має залишити бункер?</p>
-    </div>
-
-    <div class="card" style="padding:12px">
-      <div style="font-size:.8rem;color:var(--muted)">
-        🔒 Голос анонімний — інші не побачать ваш вибір<br>
-        Проголосувало: <span id="voteProgress" style="color:var(--green);font-weight:700"></span>
-      </div>
+      <h2 style="margin-top:6px">Хто має залишити бункер?</h2>
+      <p style="margin-top:4px;font-size:.9rem">Ваш голос анонімний</p>
     </div>
 
     <div style="flex:1;overflow-y:auto;padding:4px 0" id="voteList"></div>
-
     <div style="height:16px"></div>
   </div>
 </div>
 
 <!-- ══════════════════════════════════════════════
-     SCREEN 6 – ROUND RESULT
+     SCREEN: VOTE WAIT
+══════════════════════════════════════════════ -->
+<div class="screen" id="screenVoteWait">
+  <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1">
+    <div class="full-center">
+      <div class="waiting-anim">🗳️</div>
+      <h2 id="voteWaitTitle">Ваш голос прийнято ✓</h2>
+      <p id="voteWaitMsg" class="pulse" style="text-align:center">Чекаємо на інших гравців...</p>
+      <div id="voteWaitProgress" style="font-size:.9rem;color:var(--dim)"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN: ROUND RESULT
 ══════════════════════════════════════════════ -->
 <div class="screen" id="screenRoundResult">
   <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1;align-items:center">
@@ -394,22 +483,25 @@
 
     <div class="card" style="width:100%">
       <div class="card-label" style="margin-bottom:12px">📊 Розподіл голосів</div>
-      <div id="voteBars"></div>
+      <div id="resultVoteBars"></div>
     </div>
 
     <div class="card" style="width:100%;text-align:center">
       <div class="card-label" style="margin-bottom:8px">🏠 Стан бункера</div>
-      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap" id="bunkerStatus"></div>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap" id="resultBunkerStatus"></div>
     </div>
 
     <div class="spacer"></div>
-    <button class="btn btn-primary" id="btnAfterResult" style="font-size:1.05rem;padding:18px;width:100%"></button>
+    <button class="btn btn-primary" id="btnHostAfterResult" style="font-size:1.05rem;padding:18px;width:100%;display:none"></button>
+    <div id="resultPlayerMsg" style="text-align:center;font-size:.9rem;color:var(--muted);padding:8px;display:none">
+      Чекаємо наступного раунду...
+    </div>
     <div style="height:16px"></div>
   </div>
 </div>
 
 <!-- ══════════════════════════════════════════════
-     SCREEN 7 – GAME END
+     SCREEN: GAME END
 ══════════════════════════════════════════════ -->
 <div class="screen" id="screenEnd">
   <div style="width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;flex:1;align-items:center">
@@ -433,9 +525,77 @@
 </div>
 
 <!-- ══════════════════════════════════════════════
-     JAVASCRIPT
+     CARD MODAL (FAB)
 ══════════════════════════════════════════════ -->
+<div class="card-modal hidden" id="cardModal">
+  <div style="width:100%;max-width:420px">
+    <div style="text-align:center;padding:12px 0 16px">
+      <div class="phase-tag">МОЯ КАРТКА</div>
+    </div>
+    <div class="player-card-header">
+      <div style="font-size:2.5rem" id="modalProfIcon"></div>
+      <div style="font-size:.7rem;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:4px">Ваша роль</div>
+      <div style="font-size:1.3rem;font-weight:800;margin-top:2px" id="modalProfName"></div>
+      <div style="font-size:.85rem;color:var(--muted);margin-top:4px" id="modalProfDesc"></div>
+    </div>
+    <div class="player-card-body">
+      <div class="card-row">
+        <div class="card-row-icon">❤️</div>
+        <div class="card-row-info">
+          <div class="label">Стан здоров'я</div>
+          <div class="val" id="modalHealth"></div>
+        </div>
+        <div id="modalHealthBadge"></div>
+      </div>
+      <div class="card-row">
+        <div class="card-row-icon">🎯</div>
+        <div class="card-row-info"><div class="label">Хобі</div><div class="val" id="modalHobby"></div></div>
+      </div>
+      <div class="card-row">
+        <div class="card-row-icon">🎒</div>
+        <div class="card-row-info"><div class="label">Багаж</div><div class="val" id="modalBaggage"></div></div>
+      </div>
+      <div class="card-row" style="border-bottom:none">
+        <div class="card-row-icon">⚡</div>
+        <div class="card-row-info"><div class="label">Унікальна навичка</div><div class="val" id="modalSkill"></div></div>
+      </div>
+    </div>
+    <div class="fact-box">
+      <div class="fact-label">🔐 Таємний факт</div>
+      <div class="fact-text" id="modalFact"></div>
+    </div>
+    <button class="btn btn-ghost" id="btnCloseModal" style="margin-top:8px">Закрити</button>
+    <div style="height:24px"></div>
+  </div>
+</div>
+
+<!-- FAB Button -->
+<button class="fab hidden" id="fabCard" title="Моя картка">📋</button>
+
+<!-- ══════════════════════════════════════════════
+     FIREBASE SDK
+══════════════════════════════════════════════ -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
 <script>
+/* ═══════════════════════════════════════════════════════
+   FIREBASE CONFIG
+   1. Йди на https://console.firebase.google.com
+   2. Створи проект → Realtime Database → Створити базу даних
+   3. Правила (Rules): { "rules": { ".read": true, ".write": true } }
+   4. Встав свій конфіг нижче
+═══════════════════════════════════════════════════════ */
+const FIREBASE_CONFIG = {
+  apiKey: "REPLACE_WITH_YOUR_API_KEY",
+  authDomain: "REPLACE.firebaseapp.com",
+  databaseURL: "https://REPLACE-default-rtdb.firebaseio.com",
+  projectId: "REPLACE",
+  storageBucket: "REPLACE.appspot.com",
+  messagingSenderId: "REPLACE",
+  appId: "REPLACE"
+};
+
 /* ─── DATA ─────────────────────────────────── */
 const PROFESSIONS = [
   { name:'Хірург',              icon:'🏥', desc:'Досвідчений лікар з операційної' },
@@ -455,20 +615,20 @@ const PROFESSIONS = [
 ];
 
 const HEALTH = [
-  { name:'Абсолютно здоровий',       sev:'good',    icon:'💪' },
-  { name:'Легка короткозорість',      sev:'ok',      icon:'👓' },
-  { name:'Хронічна мігрень',          sev:'bad',     icon:'🤕' },
-  { name:'Цукровий діабет 2 типу',    sev:'bad',     icon:'💉' },
-  { name:'Хронічна астма',            sev:'bad',     icon:'😮‍💨' },
-  { name:'Ниркова недостатність',     sev:'danger',  icon:'🔴' },
-  { name:'Вагітна (2 місяці)',        sev:'neutral', icon:'🤰' },
-  { name:'Зламана нога (гіпс)',       sev:'bad',     icon:'🦵' },
-  { name:'ВІЛ-позитивний (стабільно)',sev:'bad',     icon:'⚠️' },
-  { name:'Алергія на антибіотики',    sev:'ok',      icon:'💊' },
-  { name:'Безсоння хронічне',         sev:'bad',     icon:'😴' },
-  { name:'Туберкульоз (відкрита форма)',sev:'danger', icon:'🫁' },
-  { name:'Клаустрофобія',             sev:'bad',     icon:'😱' },
-  { name:'Посттравматичний стрес',    sev:'bad',     icon:'🧨' },
+  { name:'Абсолютно здоровий',         sev:'good' },
+  { name:'Легка короткозорість',        sev:'ok' },
+  { name:'Хронічна мігрень',           sev:'bad' },
+  { name:'Цукровий діабет 2 типу',     sev:'bad' },
+  { name:'Хронічна астма',             sev:'bad' },
+  { name:'Ниркова недостатність',      sev:'danger' },
+  { name:'Вагітна (2 місяці)',         sev:'neutral' },
+  { name:'Зламана нога (гіпс)',        sev:'bad' },
+  { name:'ВІЛ-позитивний (стабільно)', sev:'bad' },
+  { name:'Алергія на антибіотики',     sev:'ok' },
+  { name:'Безсоння хронічне',          sev:'bad' },
+  { name:'Туберкульоз (відкрита форма)',sev:'danger' },
+  { name:'Клаустрофобія',              sev:'bad' },
+  { name:'Посттравматичний стрес',     sev:'bad' },
 ];
 
 const HOBBIES = [
@@ -543,96 +703,607 @@ const SCENARIOS = [
   {
     emoji:'☢️', name:'Ядерна катастрофа',
     alert:'🔴 Рівень радіації — смертельний',
-    desc:'Ланцюгова реакція на Запорізькій АЕС вийшла з-під контролю. Радіоактивна хмара накриває 70% території. Поверхня землі буде непридатною для life протягом 50+ років. У вас є 20 хвилин, щоб вирішити хто увійде до бункера.',
+    desc:'Ланцюгова реакція на Запорізькій АЕС вийшла з-під контролю. Радіоактивна хмара накриває 70% території. Поверхня землі буде непридатною для life протягом 50+ років.',
   },
   {
     emoji:'🦠', name:'Вірус-пандемія',
     alert:'🟠 Смертність 94%',
-    desc:'Невідомий вірус мутував і поширюється по повітрю. Він вбиває за 72 години. Жодних ліків немає. Бункер — єдине місце з системою фільтрації повітря, яка зупинить зараження. Вирішіть хто достатньо цінний для виживання людства.',
+    desc:'Невідомий вірус мутував і поширюється по повітрю. Він вбиває за 72 години. Жодних ліків немає. Бункер — єдине місце з системою фільтрації повітря, яка зупинить зараження.',
   },
   {
     emoji:'☄️', name:'Астероїдний удар',
     alert:'🔴 Кінець цивілізації',
-    desc:'Астероїд діаметром 2.3 км врізався в Атлантичний океан. Ядерна зима розпочнеться через 6 годин. Температура впаде до −60°C. Бункер розрахований на 50 років автономної роботи. Тільки найцінніші для виживання людства увійдуть усередину.',
+    desc:'Астероїд діаметром 2.3 км врізався в Атлантичний океан. Ядерна зима розпочнеться через 6 годин. Температура впаде до −60°C. Бункер розрахований на 50 років автономної роботи.',
   },
   {
     emoji:'🌊', name:'Глобальний потоп',
     alert:'🔵 Рівень води піднімається',
-    desc:'Антарктичний льодовик зруйнувався. Рівень океану підніметься на 80 метрів за 48 годин. 95% суші буде затоплено. Бункер знаходиться на висоті 3000м і оснащений технологіями для освоєння нового світу. Хто заслуговує нового шансу?',
+    desc:'Антарктичний льодовик зруйнувався. Рівень океану підніметься на 80 метрів за 48 годин. 95% суші буде затоплено. Бункер знаходиться на висоті 3000м.',
   },
 ];
 
-/* ─── STATE ─────────────────────────────────── */
-let G = {};
+/* ─── APP STATE ─────────────────────────────── */
+let db;
+let myUid       = localStorage.getItem('bunker_uid') || generateUid();
+let myRoomCode  = null;
+let isHost      = false;
+let roomRef     = null;
+let roomListener= null;
+let myCard      = null;   // { profIdx, healthIdx, hobbyIdx, baggageIdx, skillIdx, factIdx }
+let timerInterval = null;
+let cardSeen    = false;
 
-function initState(numPlayers, bunkerSpots, discussionSec, scenarioIdx) {
-  const players = [];
-  const shuffled = (arr) => [...arr].sort(() => Math.random() - .5);
-  const profs    = shuffled(PROFESSIONS).slice(0, numPlayers);
-  const healths  = shuffled(HEALTH).slice(0, numPlayers);
-  const hobbies  = shuffled(HOBBIES).slice(0, numPlayers);
-  const baggages = shuffled(BAGGAGE).slice(0, numPlayers);
-  const skills   = shuffled(SKILLS).slice(0, numPlayers);
-  const facts    = shuffled(FACTS).slice(0, numPlayers);
+localStorage.setItem('bunker_uid', myUid);
 
-  for (let i = 0; i < numPlayers; i++) {
-    players.push({
-      id: i + 1,
-      profession: profs[i],
-      health: healths[i],
-      hobby: hobbies[i],
-      baggage: baggages[i],
-      skill: skills[i],
-      fact: facts[i],
-      eliminated: false,
-      totalVotesReceived: 0,
-    });
-  }
+/* ─── SETUP STATE (create screen) ─────────── */
+let setupPlayers = 6, setupSpots = 3, setupTimer = 180, setupScenario = 0;
 
-  G = {
-    numPlayers, bunkerSpots, discussionSec, scenarioIdx,
-    players,
-    round: 1,
-    phase: 'setup',
-    votes: {},       // voterId (1-based) -> targetId (1-based)
-    currentVoterIdx: 0,
-    timerInterval: null,
-    timerLeft: discussionSec,
-  };
+/* ─── HELPERS ─────────────────────────────── */
+function generateUid() {
+  return Math.random().toString(36).slice(2, 10) + Math.random().toString(36).slice(2, 10);
 }
 
-/* ─── HELPERS ─────────────────────────────────── */
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+function generateRoomCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  return Array.from({length:4}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
 }
 
-function activePlayers() {
-  return G.players.filter(p => !p.eliminated);
-}
+function shuffled(arr) { return [...arr].sort(() => Math.random() - .5); }
 
 function fmt(sec) {
   return `${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;
 }
 
 function healthBadge(sev) {
-  const map = { good:'badge-green', ok:'badge-green', bad:'badge-amber', danger:'badge-red', neutral:'badge-green' };
+  const map   = { good:'badge-green', ok:'badge-green', bad:'badge-amber', danger:'badge-red', neutral:'badge-green' };
   const label = { good:'Здоровий', ok:'Прийнятно', bad:'Проблема', danger:'НЕБЕЗПЕКА', neutral:'Особливе' };
   return `<span class="badge ${map[sev]||'badge-amber'}">${label[sev]||sev}</span>`;
 }
 
-/* ─── SETUP SCREEN ─────────────────────────────── */
-let setupPlayers = 6, setupSpots = 3, setupTimer = 180, setupScenario = 0;
-
-function updateSetupUI() {
-  document.getElementById('valPlayers').textContent = setupPlayers;
-  document.getElementById('valSpots').textContent   = setupSpots;
-  setupSpots = Math.min(setupSpots, setupPlayers - 1);
-  document.getElementById('valSpots').textContent   = setupSpots;
-  const half = Math.ceil(setupPlayers / 2);
-  document.getElementById('spotsHint').textContent  = `рекомендовано: ${half}`;
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
 }
 
+function showError(elId, msg) {
+  const el = document.getElementById(elId);
+  el.textContent = msg;
+  el.classList.add('visible');
+}
+
+function hideError(elId) {
+  document.getElementById(elId).classList.remove('visible');
+}
+
+function showFab(visible) {
+  document.getElementById('fabCard').classList.toggle('hidden', !visible);
+}
+
+function stopTimer() {
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+}
+
+function getActivePlayers(players) {
+  return Object.entries(players || {})
+    .filter(([, p]) => !p.eliminated)
+    .sort((a, b) => a[1].order - b[1].order);
+}
+
+/* ─── FIREBASE INIT ─────────────────────────── */
+function initFirebase() {
+  try {
+    firebase.initializeApp(FIREBASE_CONFIG);
+    db = firebase.database();
+    return true;
+  } catch(e) {
+    alert('Помилка Firebase: ' + e.message + '\n\nПеревірте FIREBASE_CONFIG у коді.');
+    return false;
+  }
+}
+
+/* ─── ROOM FUNCTIONS ─────────────────────────── */
+async function createRoom() {
+  const name = document.getElementById('hostName').value.trim();
+  if (!name) { showError('createError', 'Введіть ваше ім\'я'); return; }
+  hideError('createError');
+
+  const code = generateRoomCode();
+  const scenarioIdx = setupScenario === 'random'
+    ? Math.floor(Math.random() * SCENARIOS.length)
+    : +setupScenario;
+
+  const roomData = {
+    config: {
+      spots: setupSpots,
+      timerSec: setupTimer,
+      scenarioIdx,
+      hostId: myUid,
+      totalPlayers: setupPlayers,
+    },
+    phase: 'lobby',
+    round: 1,
+    players: {
+      [myUid]: {
+        name,
+        order: 1,
+        eliminated: false,
+        cardReady: false,
+      }
+    }
+  };
+
+  try {
+    await db.ref(`rooms/${code}`).set(roomData);
+    myRoomCode = code;
+    isHost = true;
+    localStorage.setItem('bunker_room', code);
+    localStorage.setItem('bunker_host', 'true');
+    listenToRoom(code);
+  } catch(e) {
+    showError('createError', 'Помилка: ' + e.message);
+  }
+}
+
+async function joinRoom() {
+  const code = document.getElementById('joinCode').value.trim().toUpperCase();
+  const name = document.getElementById('joinName').value.trim();
+  if (!code || code.length !== 4) { showError('joinError', 'Введіть 4-літерний код кімнати'); return; }
+  if (!name) { showError('joinError', 'Введіть ваше ім\'я'); return; }
+  hideError('joinError');
+
+  try {
+    const snap = await db.ref(`rooms/${code}`).once('value');
+    if (!snap.exists()) { showError('joinError', 'Кімнату не знайдено. Перевірте код.'); return; }
+
+    const room = snap.val();
+    if (room.phase !== 'lobby') { showError('joinError', 'Гра вже почалась — не можна приєднатись.'); return; }
+
+    const playerCount = Object.keys(room.players || {}).length;
+    if (playerCount >= room.config.totalPlayers) { showError('joinError', 'Кімната вже заповнена.'); return; }
+
+    await db.ref(`rooms/${code}/players/${myUid}`).set({
+      name,
+      order: playerCount + 1,
+      eliminated: false,
+      cardReady: false,
+    });
+
+    myRoomCode = code;
+    isHost = false;
+    localStorage.setItem('bunker_room', code);
+    localStorage.setItem('bunker_host', 'false');
+    listenToRoom(code);
+  } catch(e) {
+    showError('joinError', 'Помилка: ' + e.message);
+  }
+}
+
+function listenToRoom(code) {
+  if (roomListener) db.ref(`rooms/${myRoomCode}`).off('value', roomListener);
+
+  roomRef = db.ref(`rooms/${code}`);
+  roomListener = roomRef.on('value', snap => {
+    if (!snap.exists()) return;
+    handleRoomUpdate(snap.val());
+  });
+}
+
+function detachListener() {
+  if (roomRef && roomListener) {
+    roomRef.off('value', roomListener);
+    roomListener = null;
+  }
+}
+
+/* ─── ROOM UPDATE HANDLER ─────────────────── */
+function handleRoomUpdate(data) {
+  if (!data) return;
+  const phase   = data.phase;
+  const players = data.players || {};
+  const me      = players[myUid];
+
+  // Store my card if available
+  if (me && me.card && !myCard) {
+    myCard = me.card;
+    fillCardModal(myCard);
+  }
+
+  // Show FAB during active game phases
+  const gamePhases = ['cards','discussion','voting','result'];
+  showFab(gamePhases.includes(phase) && !!myCard);
+
+  if (phase === 'lobby')      renderLobby(data);
+  else if (phase === 'cards') renderCards(data, me);
+  else if (phase === 'discussion') renderDiscussion(data);
+  else if (phase === 'voting')     renderVoting(data, me);
+  else if (phase === 'result')     renderResult(data);
+  else if (phase === 'end')        renderEnd(data);
+
+  // Auto-process votes (host only)
+  if (isHost && phase === 'voting') {
+    const active = getActivePlayers(players);
+    const votes  = (data.votes || {})[data.round] || {};
+    const voteCount = Object.keys(votes).length;
+    if (voteCount >= active.length) {
+      processVotes(data);
+    }
+  }
+}
+
+/* ─── PHASE RENDERERS ─────────────────────── */
+
+function renderLobby(data) {
+  showScreen('screenLobby');
+  const players     = data.players || {};
+  const playerList  = Object.entries(players).sort((a,b) => a[1].order - b[1].order);
+  const count       = playerList.length;
+  const total       = data.config.totalPlayers;
+  const code        = myRoomCode;
+  const sc          = SCENARIOS[data.config.scenarioIdx];
+
+  document.getElementById('lobbyCode').textContent = code;
+  document.getElementById('lobbyPlayerCount').textContent = count;
+  document.getElementById('lobbyPlayerTotal').textContent = total;
+
+  const listEl = document.getElementById('lobbyPlayerList');
+  listEl.innerHTML = playerList.map(([uid, p]) => `
+    <div class="lobby-player-row">
+      <div>
+        <div class="lobby-player-name">${p.name}</div>
+        <div class="lobby-player-sub">Гравець ${p.order}</div>
+      </div>
+      ${uid === data.config.hostId ? '<span class="badge badge-amber">Хост</span>' : '<span class="badge badge-green">✓</span>'}
+    </div>`).join('');
+
+  document.getElementById('lobbyWaitMsg').style.display = count < total ? 'block' : 'none';
+
+  const settingsCard = document.getElementById('lobbySettingsCard');
+  settingsCard.style.display = 'block';
+  document.getElementById('lobbySettings').innerHTML =
+    `🌋 ${sc.emoji} ${sc.name}<br>` +
+    `🚪 Місць у бункері: ${data.config.spots}<br>` +
+    `⏱ Час обговорення: ${fmt(data.config.timerSec)}<br>` +
+    `👥 Гравців: ${total}`;
+
+  if (isHost) {
+    const btn = document.getElementById('btnStartGame');
+    btn.style.display = 'block';
+    btn.disabled = count < 2;
+    btn.textContent = count < total
+      ? `ПОЧАТИ ГРУ (${count}/${total}) →`
+      : 'ПОЧАТИ ГРУ →';
+    document.getElementById('lobbyPlayerMsg').style.display = 'none';
+  } else {
+    document.getElementById('btnStartGame').style.display = 'none';
+    document.getElementById('lobbyPlayerMsg').style.display = 'block';
+  }
+}
+
+function renderCards(data, me) {
+  showScreen('screenMyCard');
+  showFab(false); // Hide FAB on card screen itself
+
+  if (!me || !me.card) return;
+
+  const card = me.card;
+  myCard = card;
+  fillMyCardScreen(card);
+
+  const readyBtn  = document.getElementById('btnCardReady');
+  const hostWrap  = document.getElementById('hostStartDiscussionWrap');
+  const playerMsg = document.getElementById('playerWaitCardMsg');
+
+  if (me.cardReady) {
+    readyBtn.style.display = 'none';
+    if (isHost) {
+      hostWrap.style.display = 'block';
+      playerMsg.style.display = 'none';
+    } else {
+      hostWrap.style.display = 'none';
+      playerMsg.style.display = 'block';
+    }
+  } else {
+    readyBtn.style.display = 'block';
+    hostWrap.style.display = 'none';
+    playerMsg.style.display = 'none';
+  }
+}
+
+function renderDiscussion(data) {
+  showScreen('screenDiscussion');
+  stopTimer();
+
+  const players = data.players || {};
+  const active  = getActivePlayers(players);
+  const toElim  = active.length - data.config.spots;
+  const timerSec = data.config.timerSec;
+  const endAt   = data.timerEndAt || (Date.now() + timerSec * 1000);
+
+  document.getElementById('discRoundNum').textContent   = data.round;
+  document.getElementById('discToElimCount').textContent = toElim;
+
+  const cont = document.getElementById('discActivePlayers');
+  cont.innerHTML = active.map(([, p]) =>
+    `<span class="badge badge-green">${p.name}</span>`).join('');
+
+  // Timer
+  const circumf = 2 * Math.PI * 88;
+  const circle  = document.getElementById('discTimerCircle');
+  circle.style.strokeDasharray = circumf;
+
+  function tick() {
+    const remaining = Math.max(0, Math.round((endAt - Date.now()) / 1000));
+    const prog = remaining / timerSec;
+    circle.style.strokeDashoffset = circumf * (1 - prog);
+    circle.style.stroke = prog < .33 ? 'var(--red)' : prog < .6 ? 'var(--amber)' : 'var(--green)';
+    document.getElementById('discTimerDisplay').textContent = fmt(remaining);
+    if (remaining <= 0) stopTimer();
+  }
+  tick();
+  timerInterval = setInterval(tick, 1000);
+
+  if (isHost) {
+    document.getElementById('btnHostGoVote').style.display = 'block';
+    document.getElementById('discPlayerMsg').style.display = 'none';
+  } else {
+    document.getElementById('btnHostGoVote').style.display = 'none';
+    document.getElementById('discPlayerMsg').style.display = 'block';
+  }
+}
+
+function renderVoting(data, me) {
+  const players = data.players || {};
+  const active  = getActivePlayers(players);
+  const votes   = (data.votes || {})[data.round] || {};
+  const myVote  = votes[myUid];
+  const isEliminated = me && me.eliminated;
+
+  if (isEliminated || myVote) {
+    // Show wait screen
+    showScreen('screenVoteWait');
+    if (isEliminated) {
+      document.getElementById('voteWaitTitle').textContent = 'Ви вибули 💀';
+      document.getElementById('voteWaitMsg').textContent = 'Чекаємо результатів голосування...';
+    } else {
+      document.getElementById('voteWaitTitle').textContent = 'Ваш голос прийнято ✓';
+      document.getElementById('voteWaitMsg').textContent = 'Чекаємо на інших гравців...';
+    }
+    const voted = Object.keys(votes).length;
+    document.getElementById('voteWaitProgress').textContent = `Проголосувало: ${voted} / ${active.length}`;
+    return;
+  }
+
+  showScreen('screenVote');
+  document.getElementById('voteRoundNum').textContent = data.round;
+
+  const list = document.getElementById('voteList');
+  list.innerHTML = '';
+  active.filter(([uid]) => uid !== myUid).forEach(([uid, p]) => {
+    const prof = PROFESSIONS[p.card ? p.card.profIdx : 0];
+    const row  = document.createElement('div');
+    row.className = 'player-row';
+    row.innerHTML = `
+      <div>
+        <div class="player-num">${p.name}</div>
+        <div style="font-size:.8rem;color:var(--muted)">${prof ? prof.icon + ' ' + prof.name : ''}</div>
+      </div>
+      <div style="font-size:1.4rem;color:var(--red)">☠️</div>`;
+    row.onclick = () => castVote(uid, data.round);
+    list.appendChild(row);
+  });
+}
+
+function renderResult(data) {
+  showScreen('screenRoundResult');
+  stopTimer();
+
+  const result  = data.lastResult || {};
+  const players = data.players || {};
+  const eliminated = result.eliminatedUids || [];
+  const tally   = result.tally || {};
+  const isTie   = eliminated.length > 1;
+
+  const elimNames = eliminated.map(uid => (players[uid] || {}).name || uid).join(', ');
+  document.getElementById('resultEmoji').textContent    = isTie ? '⚖️' : '💀';
+  document.getElementById('resultTitle').textContent    = isTie
+    ? `Нічия! Виходять: ${elimNames}`
+    : `${elimNames} залишає бункер`;
+  const maxV = Math.max(...Object.values(tally).map(Number));
+  document.getElementById('resultSubtitle').textContent = isTie
+    ? `По ${maxV} голосів — виключені всі`
+    : `Отримав ${maxV} голос${maxV === 1 ? '' : 'ів'}`;
+
+  // Vote bars
+  const activeBeforeElim = Object.entries(players)
+    .filter(([uid]) => tally[uid] !== undefined)
+    .sort((a,b) => (tally[b[0]]||0)-(tally[a[0]]||0));
+  const total = activeBeforeElim.length;
+
+  const bars = document.getElementById('resultVoteBars');
+  bars.innerHTML = activeBeforeElim.map(([uid, p]) => {
+    const v    = tally[uid] || 0;
+    const pct  = total > 0 ? Math.round(v / total * 100) : 0;
+    const most = eliminated.includes(uid);
+    const prof = p.card ? PROFESSIONS[p.card.profIdx] : null;
+    return `
+      <div class="vote-bar-wrap">
+        <div class="vote-bar-label">
+          <span>${prof ? prof.icon : ''} ${p.name}</span>
+          <span style="color:${most?'var(--red)':'var(--muted)'}">${v} голос${v===1?'':'ів'}</span>
+        </div>
+        <div class="vote-bar-bg">
+          <div class="vote-bar-fill${most?' most':''}" style="width:${pct}%"></div>
+        </div>
+      </div>`;
+  }).join('');
+
+  // Bunker status
+  const survivors = Object.entries(players).filter(([,p]) => !p.eliminated);
+  const losers    = Object.entries(players).filter(([,p]) => p.eliminated);
+  document.getElementById('resultBunkerStatus').innerHTML =
+    survivors.map(([,p]) => `<span class="badge badge-green">✅ ${p.name}</span>`).join('') +
+    losers.map(([,p]) => `<span class="badge badge-red">❌ ${p.name}</span>`).join('');
+
+  const gameOver = survivors.length <= data.config.spots;
+  if (isHost) {
+    const btn = document.getElementById('btnHostAfterResult');
+    btn.style.display = 'block';
+    btn.textContent   = gameOver ? 'ЗАВЕРШИТИ ГРУ →' : `РАУНД ${data.round + 1} →`;
+    btn.onclick = () => {
+      if (gameOver) db.ref(`rooms/${myRoomCode}/phase`).set('end');
+      else {
+        const nextRound = data.round + 1;
+        const endAt = Date.now() + data.config.timerSec * 1000;
+        db.ref(`rooms/${myRoomCode}`).update({ phase:'discussion', round: nextRound, timerEndAt: endAt });
+      }
+    };
+    document.getElementById('resultPlayerMsg').style.display = 'none';
+  } else {
+    document.getElementById('btnHostAfterResult').style.display = 'none';
+    document.getElementById('resultPlayerMsg').style.display = 'block';
+  }
+}
+
+function renderEnd(data) {
+  showScreen('screenEnd');
+  showFab(false);
+  stopTimer();
+
+  const players  = data.players || {};
+  const survivors = Object.entries(players).filter(([,p]) => !p.eliminated);
+  const losers    = Object.entries(players).filter(([,p]) => p.eliminated);
+
+  document.getElementById('endTitle').textContent = `${survivors.length} з ${Object.keys(players).length} вижили`;
+
+  document.getElementById('survivorCards').innerHTML = survivors.map(([,p]) => {
+    const prof = p.card ? PROFESSIONS[p.card.profIdx] : null;
+    return `
+      <div class="card animate-in" style="display:flex;align-items:center;gap:14px;padding:14px">
+        <div style="font-size:2rem">${prof ? prof.icon : '🎭'}</div>
+        <div>
+          <div class="badge badge-green" style="margin-bottom:4px">${p.name} — ВИЖИВШИЙ</div>
+          <div style="font-weight:700">${prof ? prof.name : ''}</div>
+          <div style="font-size:.8rem;color:var(--muted)">${p.card ? SKILLS[p.card.skillIdx] : ''}</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('loserBadges').innerHTML = losers.map(([,p]) =>
+    `<span class="badge badge-red">💀 ${p.name}</span>`).join('');
+
+  document.getElementById('btnRestart').style.display = isHost ? 'block' : 'none';
+}
+
+/* ─── FILL CARD SCREENS ─────────────────────── */
+function fillMyCardScreen(card) {
+  const prof   = PROFESSIONS[card.profIdx];
+  const health = HEALTH[card.healthIdx];
+  document.getElementById('myCardProfIcon').textContent  = prof.icon;
+  document.getElementById('myCardProfName').textContent  = prof.name;
+  document.getElementById('myCardProfDesc').textContent  = prof.desc;
+  document.getElementById('myCardHealth').textContent    = health.name;
+  document.getElementById('myCardHealthBadge').innerHTML = healthBadge(health.sev);
+  document.getElementById('myCardHobby').textContent     = HOBBIES[card.hobbyIdx];
+  document.getElementById('myCardBaggage').textContent   = BAGGAGE[card.baggageIdx];
+  document.getElementById('myCardSkill').textContent     = SKILLS[card.skillIdx];
+  document.getElementById('myCardFact').textContent      = FACTS[card.factIdx];
+}
+
+function fillCardModal(card) {
+  const prof   = PROFESSIONS[card.profIdx];
+  const health = HEALTH[card.healthIdx];
+  document.getElementById('modalProfIcon').textContent  = prof.icon;
+  document.getElementById('modalProfName').textContent  = prof.name;
+  document.getElementById('modalProfDesc').textContent  = prof.desc;
+  document.getElementById('modalHealth').textContent    = health.name;
+  document.getElementById('modalHealthBadge').innerHTML = healthBadge(health.sev);
+  document.getElementById('modalHobby').textContent     = HOBBIES[card.hobbyIdx];
+  document.getElementById('modalBaggage').textContent   = BAGGAGE[card.baggageIdx];
+  document.getElementById('modalSkill').textContent     = SKILLS[card.skillIdx];
+  document.getElementById('modalFact').textContent      = FACTS[card.factIdx];
+}
+
+/* ─── VOTE LOGIC ─────────────────────────────── */
+async function castVote(targetUid, round) {
+  await db.ref(`rooms/${myRoomCode}/votes/${round}/${myUid}`).set(targetUid);
+}
+
+async function processVotes(data) {
+  const players = data.players || {};
+  const round   = data.round;
+  const votes   = (data.votes || {})[round] || {};
+
+  // Tally
+  const active = getActivePlayers(players);
+  const tally  = {};
+  active.forEach(([uid]) => { tally[uid] = 0; });
+  Object.values(votes).forEach(tid => { if (tally[tid] !== undefined) tally[tid]++; });
+
+  const maxVotes = Math.max(...Object.values(tally));
+  const topUids  = Object.keys(tally).filter(uid => tally[uid] === maxVotes);
+
+  // Mark eliminated
+  const updates = {};
+  topUids.forEach(uid => { updates[`players/${uid}/eliminated`] = true; });
+  updates['lastResult'] = { round, eliminatedUids: topUids, tally };
+  updates['phase'] = 'result';
+
+  await db.ref(`rooms/${myRoomCode}`).update(updates);
+}
+
+/* ─── HOST: START GAME ─────────────────────── */
+async function startGame() {
+  const snap = await db.ref(`rooms/${myRoomCode}`).once('value');
+  const data = snap.val();
+  if (!data) return;
+
+  const players = data.players || {};
+  const uids    = Object.keys(players);
+  const n       = uids.length;
+
+  const profs    = shuffled([...Array(PROFESSIONS.length).keys()]).slice(0, n);
+  const healths  = shuffled([...Array(HEALTH.length).keys()]).slice(0, n);
+  const hobbies  = shuffled([...Array(HOBBIES.length).keys()]).slice(0, n);
+  const baggages = shuffled([...Array(BAGGAGE.length).keys()]).slice(0, n);
+  const skills   = shuffled([...Array(SKILLS.length).keys()]).slice(0, n);
+  const facts    = shuffled([...Array(FACTS.length).keys()]).slice(0, n);
+
+  const updates = { phase: 'cards' };
+  uids.forEach((uid, i) => {
+    updates[`players/${uid}/card`] = {
+      profIdx:    profs[i],
+      healthIdx:  healths[i],
+      hobbyIdx:   hobbies[i],
+      baggageIdx: baggages[i],
+      skillIdx:   skills[i],
+      factIdx:    facts[i],
+    };
+  });
+
+  await db.ref(`rooms/${myRoomCode}`).update(updates);
+}
+
+/* ─── EVENT LISTENERS ─────────────────────── */
+
+// Landing
+document.getElementById('btnGoCreate').onclick = () => showScreen('screenCreate');
+document.getElementById('btnGoJoin').onclick   = () => showScreen('screenJoin');
+
+// Back buttons
+document.getElementById('btnBackToLanding').onclick  = () => showScreen('screenLanding');
+document.getElementById('btnBackToLanding2').onclick = () => showScreen('screenLanding');
+
+// Create
+document.getElementById('btnCreateRoom').onclick = createRoom;
+
+// Join
+document.getElementById('btnJoinRoom').onclick = joinRoom;
+document.getElementById('joinCode').addEventListener('input', e => {
+  e.target.value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
+});
+
+// Setup steppers
 document.getElementById('btnDecPlayers').onclick = () => { if(setupPlayers>2){setupPlayers--;updateSetupUI();} };
 document.getElementById('btnIncPlayers').onclick = () => { if(setupPlayers<14){setupPlayers++;updateSetupUI();} };
 document.getElementById('btnDecSpots').onclick   = () => { if(setupSpots>1){setupSpots--;updateSetupUI();} };
@@ -651,356 +1322,84 @@ document.getElementById('scenarioOptions').addEventListener('click', e => {
   if (!btn) return;
   document.querySelectorAll('.scen-opt').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
-  setupScenario = btn.dataset.val === 'random' ? Math.floor(Math.random() * SCENARIOS.length) : +btn.dataset.val;
+  setupScenario = btn.dataset.val === 'random' ? 'random' : +btn.dataset.val;
 });
 
-document.getElementById('btnStartGame').onclick = () => {
-  initState(setupPlayers, setupSpots, setupTimer, setupScenario);
-  showScenario();
+// Lobby
+document.getElementById('btnStartGame').onclick = startGame;
+document.getElementById('lobbyCode').onclick = () => {
+  navigator.clipboard.writeText(myRoomCode).then(() => {
+    document.getElementById('lobbyCode').textContent = '✓ СКОПІЙОВАНО';
+    setTimeout(() => { document.getElementById('lobbyCode').textContent = myRoomCode; }, 1500);
+  });
 };
 
+// My card
+document.getElementById('btnCardReady').onclick = async () => {
+  await db.ref(`rooms/${myRoomCode}/players/${myUid}/cardReady`).set(true);
+};
+
+document.getElementById('btnHostStartDiscussion').onclick = async () => {
+  const endAt = Date.now() + setupTimer * 1000;
+  // Use current config from Firebase
+  const snap = await db.ref(`rooms/${myRoomCode}/config/timerSec`).once('value');
+  const timerSec = snap.val() || setupTimer;
+  await db.ref(`rooms/${myRoomCode}`).update({
+    phase: 'discussion',
+    timerEndAt: Date.now() + timerSec * 1000,
+  });
+};
+
+// Discussion
+document.getElementById('btnHostGoVote').onclick = async () => {
+  await db.ref(`rooms/${myRoomCode}/phase`).set('voting');
+};
+
+// FAB card modal
+document.getElementById('fabCard').onclick = () => {
+  document.getElementById('cardModal').classList.remove('hidden');
+};
+document.getElementById('btnCloseModal').onclick = () => {
+  document.getElementById('cardModal').classList.add('hidden');
+};
+
+// Restart
+document.getElementById('btnRestart').onclick = async () => {
+  detachListener();
+  myRoomCode = null;
+  isHost = false;
+  myCard = null;
+  cardSeen = false;
+  localStorage.removeItem('bunker_room');
+  localStorage.removeItem('bunker_host');
+  showScreen('screenLanding');
+};
+
+/* ─── SETUP UI ─────────────────────────────── */
+function updateSetupUI() {
+  document.getElementById('valPlayers').textContent = setupPlayers;
+  setupSpots = Math.min(setupSpots, setupPlayers - 1);
+  document.getElementById('valSpots').textContent   = setupSpots;
+  const half = Math.ceil(setupPlayers / 2);
+  document.getElementById('spotsHint').textContent  = `рекомендовано: ${half}`;
+}
 updateSetupUI();
 
-/* ─── SCENARIO SCREEN ─────────────────────────── */
-function showScenario() {
-  const sc = SCENARIOS[G.scenarioIdx];
-  document.getElementById('scenarioEmoji').textContent = sc.emoji;
-  document.getElementById('scenarioName').textContent  = sc.name;
-  document.getElementById('scenarioAlert').textContent = sc.alert;
-  document.getElementById('scenarioDesc').textContent  = sc.desc;
-  document.getElementById('sInfoPlayers').textContent  = G.numPlayers;
-  document.getElementById('sInfoSpots').textContent    = G.bunkerSpots;
-  const rounds = G.numPlayers - G.bunkerSpots;
-  document.getElementById('sInfoRounds').textContent   = rounds;
-  document.getElementById('sInfoSpots2').textContent   = G.bunkerSpots;
-  showScreen('screenScenario');
-}
-
-document.getElementById('btnToCardDeal').onclick = () => {
-  G.currentCardIdx = 0;
-  showCardForPlayer(0);
-};
-
-/* ─── CARD DEAL SCREEN ─────────────────────────── */
-function showCardForPlayer(idx) {
-  if (idx >= G.numPlayers) {
-    showDiscussion();
-    return;
-  }
-  const p = G.players[idx];
-  showCoverThen(
-    `Гравець ${p.id}`,
-    'Готові побачити свою картку?',
-    'ПОКАЗАТИ МОЮ КАРТКУ',
-    () => {
-      renderCard(p);
-      showScreen('screenCard');
-    }
-  );
-}
-
-function renderCard(p) {
-  document.getElementById('cardPlayerNum').textContent  = p.id;
-  document.getElementById('cardPlayerTotal').textContent = G.numPlayers;
-  document.getElementById('cardProfIcon').textContent   = p.profession.icon;
-  document.getElementById('cardProfName').textContent   = p.profession.name;
-  document.getElementById('cardProfDesc').textContent   = p.profession.desc;
-  document.getElementById('cardHealth').textContent     = p.health.name;
-  document.getElementById('cardHealthBadge').innerHTML  = healthBadge(p.health.sev);
-  document.getElementById('cardHobby').textContent      = p.hobby;
-  document.getElementById('cardBaggage').textContent    = p.baggage;
-  document.getElementById('cardSkill').textContent      = p.skill;
-  document.getElementById('cardFact').textContent       = p.fact;
-}
-
-document.getElementById('btnCardReady').onclick = () => {
-  const nextIdx = G.currentCardIdx + 1;
-  G.currentCardIdx = nextIdx;
-  if (nextIdx < G.numPlayers) {
-    showCoverThen(
-      `Гравець ${nextIdx + 1}`,
-      'Передайте телефон наступному гравцю',
-      'ПОКАЗАТИ МОЮ КАРТКУ',
-      () => {
-        renderCard(G.players[nextIdx]);
-        showScreen('screenCard');
-      }
-    );
-  } else {
-    showCoverThen(
-      '📋 Усі картки роздано',
-      'Починаємо обговорення!',
-      'ПОЧАТИ ОБГОВОРЕННЯ',
-      () => showDiscussion()
-    );
-  }
-};
-
-/* ─── COVER SCREEN ─────────────────────────── */
-function showCoverThen(name, text, btnText, callback) {
-  document.getElementById('coverPlayerName').textContent = name;
-  document.getElementById('coverText').textContent       = text;
-  document.getElementById('coverBtn').textContent        = btnText;
-  document.getElementById('coverScreen').classList.remove('hidden');
-  document.getElementById('coverBtn').onclick = () => {
-    document.getElementById('coverScreen').classList.add('hidden');
-    callback();
-  };
-}
-
-/* ─── DISCUSSION SCREEN ─────────────────────── */
-function showDiscussion() {
-  stopTimer();
-  const active = activePlayers();
-  const toElim = active.length - G.bunkerSpots;
-
-  document.getElementById('roundNum').textContent   = G.round;
-  document.getElementById('toElimCount').textContent = toElim;
-
-  // Active players badges
-  const cont = document.getElementById('activePlayers');
-  cont.innerHTML = active.map(p =>
-    `<span class="badge badge-green">Гравець ${p.id}</span>`
-  ).join('');
-
-  // Timer setup
-  G.timerLeft = G.discussionSec;
-  const circumf = 2 * Math.PI * 88;
-  const circle  = document.getElementById('timerCircle');
-  circle.style.strokeDasharray  = circumf;
-  circle.style.strokeDashoffset = 0;
-
-  showScreen('screenDiscussion');
-
-  G.timerInterval = setInterval(() => {
-    G.timerLeft--;
-    const prog = G.timerLeft / G.discussionSec;
-    circle.style.strokeDashoffset = circumf * (1 - prog);
-    if (prog < .33) circle.style.stroke = 'var(--red)';
-    else if (prog < .6) circle.style.stroke = 'var(--amber)';
-    else circle.style.stroke = 'var(--green)';
-    document.getElementById('timerDisplay').textContent = fmt(G.timerLeft);
-    if (G.timerLeft <= 0) {
-      stopTimer();
-      document.getElementById('timerDisplay').textContent = '0:00';
-    }
-  }, 1000);
-}
-
-function stopTimer() {
-  if (G.timerInterval) { clearInterval(G.timerInterval); G.timerInterval = null; }
-}
-
-document.getElementById('btnStartVoting').onclick = () => {
-  stopTimer();
-  startVotingRound();
-};
-
-/* ─── VOTING SCREEN ─────────────────────────── */
-function startVotingRound() {
-  G.votes = {};
-  G.currentVoterIdx = 0;
-  showVoteForCurrent();
-}
-
-function showVoteForCurrent() {
-  const active = activePlayers();
-  if (G.currentVoterIdx >= active.length) {
-    // All voted
-    processVotes();
-    return;
-  }
-  const voter = active[G.currentVoterIdx];
-  const remaining = active.length - G.currentVoterIdx;
-
-  showCoverThen(
-    `Гравець ${voter.id}`,
-    `Час голосувати. Ваш голос анонімний.\nЗалишилось проголосувати: ${remaining}`,
-    'ПРОГОЛОСУВАТИ',
-    () => {
-      renderVoteScreen(voter, active);
-      showScreen('screenVote');
-    }
-  );
-}
-
-function renderVoteScreen(voter, active) {
-  document.getElementById('voteRoundNum').textContent  = G.round;
-  document.getElementById('votePlayerNum').textContent = voter.id;
-  document.getElementById('voteProgress').textContent  =
-    `${G.currentVoterIdx} / ${active.length}`;
-
-  const list = document.getElementById('voteList');
-  list.innerHTML = '';
-  active.filter(p => p.id !== voter.id).forEach(p => {
-    const row = document.createElement('div');
-    row.className = 'player-row';
-    row.innerHTML = `
-      <div>
-        <div class="player-num">Гравець ${p.id}</div>
-        <div style="font-size:.8rem;color:var(--muted)">${p.profession.icon} ${p.profession.name}</div>
-      </div>
-      <div style="font-size:1.4rem;color:var(--red)">☠️</div>`;
-    row.onclick = () => castVote(voter, p.id, active);
-    list.appendChild(row);
-  });
-}
-
-function castVote(voter, targetId, active) {
-  G.votes[voter.id] = targetId;
-  G.currentVoterIdx++;
-
-  if (G.currentVoterIdx < active.length) {
-    const next = active[G.currentVoterIdx];
-    showCoverThen(
-      `Гравець ${next.id}`,
-      `Гравець ${voter.id} проголосував ✓\nПередайте телефон наступному`,
-      'ПРОГОЛОСУВАТИ',
-      () => {
-        renderVoteScreen(next, active);
-        showScreen('screenVote');
-      }
-    );
-  } else {
-    showCoverThen(
-      '🗳️ Голосування завершено',
-      'Рахуємо голоси...',
-      'ПОБАЧИТИ РЕЗУЛЬТАТИ',
-      () => processVotes()
-    );
+/* ─── RECONNECT ─────────────────────────────── */
+function tryReconnect() {
+  const savedRoom = localStorage.getItem('bunker_room');
+  const savedHost = localStorage.getItem('bunker_host');
+  if (savedRoom) {
+    myRoomCode = savedRoom;
+    isHost     = savedHost === 'true';
+    listenToRoom(savedRoom);
   }
 }
 
-/* ─── VOTE PROCESSING ─────────────────────────── */
-function processVotes() {
-  const active = activePlayers();
-  // Tally
-  const tally = {};
-  active.forEach(p => tally[p.id] = 0);
-  Object.values(G.votes).forEach(tid => { if(tally[tid]!==undefined) tally[tid]++; });
-
-  // Find max
-  const maxVotes = Math.max(...Object.values(tally));
-  const topIds   = Object.keys(tally).filter(id => tally[id] === maxVotes).map(Number);
-
-  let eliminated;
-  if (topIds.length === 1) {
-    eliminated = [topIds[0]];
-  } else {
-    // Tie: eliminate all tied players
-    eliminated = topIds;
-  }
-
-  eliminated.forEach(id => {
-    const p = G.players.find(p => p.id === id);
-    if (p) { p.eliminated = true; p.totalVotesReceived = tally[id]; }
-  });
-
-  showRoundResult(tally, eliminated, maxVotes, active);
+/* ─── BOOT ──────────────────────────────────── */
+if (initFirebase()) {
+  tryReconnect();
 }
-
-/* ─── ROUND RESULT SCREEN ─────────────────────── */
-function showRoundResult(tally, eliminatedIds, maxVotes, activeBeforeElim) {
-  const survivors = activePlayers();
-  const isTie     = eliminatedIds.length > 1;
-  const elimNames = eliminatedIds.map(id => `Гравець ${id}`).join(', ');
-
-  document.getElementById('resultEmoji').textContent    = isTie ? '⚖️' : '💀';
-  document.getElementById('resultTitle').textContent    = isTie
-    ? `Нічия! Виходять ${elimNames}`
-    : `${elimNames} залишає бункер`;
-  document.getElementById('resultSubtitle').textContent = isTie
-    ? `По ${maxVotes} голоси — виключені всі`
-    : `Отримав ${maxVotes} голоси`;
-
-  // Vote bars
-  const bars = document.getElementById('voteBars');
-  bars.innerHTML = '';
-  const sorted = [...activeBeforeElim].sort((a,b) => (tally[b.id]||0)-(tally[a.id]||0));
-  const total  = activeBeforeElim.length;
-  sorted.forEach(p => {
-    const v    = tally[p.id] || 0;
-    const pct  = total > 0 ? Math.round(v / total * 100) : 0;
-    const most = eliminatedIds.includes(p.id);
-    bars.innerHTML += `
-      <div class="vote-bar-wrap">
-        <div class="vote-bar-label">
-          <span>${p.profession.icon} Гравець ${p.id}</span>
-          <span style="color:${most?'var(--red)':'var(--muted)'}">${v} голос${v===1?'':'ів'}</span>
-        </div>
-        <div class="vote-bar-bg">
-          <div class="vote-bar-fill${most?' most':''}" style="width:${pct}%"></div>
-        </div>
-      </div>`;
-  });
-
-  // Bunker status
-  const bstatus = document.getElementById('bunkerStatus');
-  bstatus.innerHTML = survivors.map(p =>
-    `<span class="badge badge-green">✅ Гравець ${p.id}</span>`
-  ).join('') +
-  G.players.filter(p=>p.eliminated).map(p=>
-    `<span class="badge badge-red">❌ Гравець ${p.id}</span>`
-  ).join('');
-
-  const gameOver = survivors.length <= G.bunkerSpots;
-  const btn = document.getElementById('btnAfterResult');
-  btn.textContent = gameOver ? 'ЗАВЕРШИТИ ГРУ →' : `РАУНД ${G.round + 1} →`;
-  btn.onclick = () => {
-    if (gameOver) showGameEnd();
-    else { G.round++; showDiscussion(); }
-  };
-
-  showScreen('screenRoundResult');
-}
-
-/* ─── GAME END ─────────────────────────────────── */
-function showGameEnd() {
-  const survivors = activePlayers();
-  const losers    = G.players.filter(p => p.eliminated);
-
-  document.getElementById('endTitle').textContent = `${survivors.length} з ${G.numPlayers} вижили`;
-
-  const sc = document.getElementById('survivorCards');
-  sc.innerHTML = survivors.map(p => `
-    <div class="card animate-in" style="display:flex;align-items:center;gap:14px;padding:14px">
-      <div style="font-size:2rem">${p.profession.icon}</div>
-      <div>
-        <div class="badge badge-green" style="margin-bottom:4px">Гравець ${p.id} — ВИЖИВШИЙ</div>
-        <div style="font-weight:700">${p.profession.name}</div>
-        <div style="font-size:.8rem;color:var(--muted)">${p.skill}</div>
-      </div>
-    </div>`).join('');
-
-  document.getElementById('loserBadges').innerHTML = losers.map(p =>
-    `<span class="badge badge-red">💀 Гравець ${p.id}</span>`).join('');
-
-  showScreen('screenEnd');
-}
-
-document.getElementById('btnRestart').onclick = () => {
-  setupPlayers = 6; setupSpots = 3; setupTimer = 180; setupScenario = 0;
-  updateSetupUI();
-  document.querySelectorAll('.timer-opt').forEach(b => b.classList.toggle('selected', b.dataset.val==='180'));
-  document.querySelectorAll('.scen-opt').forEach(b => b.classList.toggle('selected', b.dataset.val==='0'));
-  showScreen('screenSetup');
-};
-
-/* ─── STYLE TWEAKS for selected btn ─────────── */
-document.querySelectorAll('.timer-opt,.scen-opt').forEach(btn => {
-  btn.addEventListener('click', () => {});
-});
-
-// Dynamic selected style
-const style = document.createElement('style');
-style.textContent = `
-  .timer-opt.selected, .scen-opt.selected {
-    background: var(--green3) !important;
-    border-color: var(--green) !important;
-    color: var(--green) !important;
-  }
-`;
-document.head.appendChild(style);
 </script>
 </body>
 </html>
