@@ -1361,8 +1361,11 @@ document.getElementById('scenarioOptions').addEventListener('click', e => {
 document.getElementById('btnStartGame').onclick = startGame;
 document.getElementById('lobbyCode').onclick = () => {
   navigator.clipboard.writeText(myRoomCode).then(() => {
-    document.getElementById('lobbyCode').textContent = '✓ СКОПІЙОВАНО';
-    setTimeout(() => { document.getElementById('lobbyCode').textContent = myRoomCode; }, 1500);
+    const el = document.getElementById('lobbyCode');
+    const prev = el.style.fontSize;
+    el.style.fontSize = '1.2rem';
+    el.textContent = '✓ Скопійовано';
+    setTimeout(() => { el.textContent = myRoomCode; el.style.fontSize = prev; }, 1500);
   });
 };
 
