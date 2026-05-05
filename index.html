@@ -587,13 +587,14 @@
    4. Встав свій конфіг нижче
 ═══════════════════════════════════════════════════════ */
 const FIREBASE_CONFIG = {
-  apiKey: "REPLACE_WITH_YOUR_API_KEY",
-  authDomain: "REPLACE.firebaseapp.com",
-  databaseURL: "https://REPLACE-default-rtdb.firebaseio.com",
-  projectId: "REPLACE",
-  storageBucket: "REPLACE.appspot.com",
-  messagingSenderId: "REPLACE",
-  appId: "REPLACE"
+  apiKey: "AIzaSyCVttGHSFNgKZOLseYJ6tWTIxS1I4E8jQ8",
+  authDomain: "bunker-game-67f85.firebaseapp.com",
+  databaseURL: "https://bunker-game-67f85-default-rtdb.firebaseio.com",
+  projectId: "bunker-game-67f85",
+  storageBucket: "bunker-game-67f85.firebasestorage.app",
+  messagingSenderId: "193182486136",
+  appId: "1:193182486136:web:da9a40ed0d955f016f678d",
+  measurementId: "G-CT1VDBN24Z"
 };
 
 /* ─── DATA ─────────────────────────────────── */
@@ -791,22 +792,51 @@ function getActivePlayers(players) {
 }
 
 /* ─── FIREBASE INIT ─────────────────────────── */
+function isPlaceholderConfig() {
+  return FIREBASE_CONFIG.apiKey.startsWith('REPLACE') ||
+         FIREBASE_CONFIG.databaseURL.includes('REPLACE');
+}
+
 function initFirebase() {
+  if (isPlaceholderConfig()) return true; // defer error to when user tries to create/join
   try {
     firebase.initializeApp(FIREBASE_CONFIG);
     db = firebase.database();
     return true;
   } catch(e) {
-    alert('Помилка Firebase: ' + e.message + '\n\nПеревірте FIREBASE_CONFIG у коді.');
+    if (e.code === 'app/duplicate-app') {
+      db = firebase.database();
+      return true;
+    }
+    alert('Помилка Firebase: ' + e.message);
     return false;
   }
 }
 
 /* ─── ROOM FUNCTIONS ─────────────────────────── */
 async function createRoom() {
+  if (isPlaceholderConfig()) {
+    showError('createError',
+      '⚠️ Firebase не налаштовано! Відкрий index.html у редакторі, знайди FIREBASE_CONFIG і встав свій конфіг з console.firebase.google.com');
+    return;
+  }
+  if (!db) {
+    try {
+      firebase.initializeApp(FIREBASE_CONFIG);
+      db = firebase.database();
+    } catch(e) {
+      if (e.code === 'app/duplicate-app') { db = firebase.database(); }
+      else { showError('createError', 'Помилка Firebase: ' + e.message); return; }
+    }
+  }
+
   const name = document.getElementById('hostName').value.trim();
   if (!name) { showError('createError', 'Введіть ваше ім\'я'); return; }
   hideError('createError');
+
+  const btn = document.getElementById('btnCreateRoom');
+  btn.disabled = true;
+  btn.textContent = 'Створюємо кімнату...';
 
   const code = generateRoomCode();
   const scenarioIdx = setupScenario === 'random'
@@ -841,7 +871,9 @@ async function createRoom() {
     localStorage.setItem('bunker_host', 'true');
     listenToRoom(code);
   } catch(e) {
-    showError('createError', 'Помилка: ' + e.message);
+    btn.disabled = false;
+    btn.textContent = 'СТВОРИТИ КІМНАТУ →';
+    showError('createError', 'Помилка запису в Firebase: ' + e.message);
   }
 }
 
