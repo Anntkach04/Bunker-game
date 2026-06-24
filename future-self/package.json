@@ -1,0 +1,39 @@
+{
+  "name": "future-self-newsletter",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Write to your future self. Submit your 5-year vision and get a weekly newsletter from the person you're becoming.",
+  "scripts": {
+    "dev": "concurrently -k -n server,client -c blue,magenta \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:server": "nodemon --watch server server/index.cjs",
+    "dev:client": "vite",
+    "build": "vite build",
+    "start": "node server/index.cjs",
+    "lint": "eslint .",
+    "test": "node --test server/__tests__/*.test.cjs"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.10.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.20.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.2",
+    "eslint": "^9.20.0",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "globals": "^15.14.0",
+    "nodemon": "^3.1.9",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.29.0",
+    "tailwindcss": "^4.0.6",
+    "@tailwindcss/vite": "^4.0.6",
+    "vite": "^6.1.0"
+  }
+}
